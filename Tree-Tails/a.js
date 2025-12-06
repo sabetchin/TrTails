@@ -30,21 +30,26 @@ class AdoptionApp {
         this.init();
     }
 
-   async init() {
-    // 1. Check LocalStorage first (Instant Fix)
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-        currentUser = JSON.parse(storedUser);
-        console.log("Restored user from storage:", currentUser);
-        this.updateAuthUI(true); // Force UI to show "Logged In" state
-    }
+    async init() {
+        // --- FIX 1: Check LocalStorage first for instant UI update ---
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+            try {
+                currentUser = JSON.parse(storedUser);
+                console.log("Restored user from storage:", currentUser);
+                this.updateUIForUser(currentUser); 
+            } catch (e) {
+                console.error("Error parsing stored user", e);
+            }
+        }
 
-    this.setupEventListeners();
-    await this.loadAnimals();
-    this.loadMyApplications();
-    this.loadMyListings();
-    this.setupAuthListener(); // Firebase will double-check this later
-}
+        this.setupEventListeners();
+        await this.loadAnimals();
+        this.loadMyApplications();
+        this.loadMyListings();
+        this.setupAuthListener();
+        this.showNotification('Adoption platform loaded successfully! 🐾', 'success');
+    }
 
     setupEventListeners() {
         // Tab switching
@@ -56,35 +61,44 @@ class AdoptionApp {
         });
 
         // Search and filter events
-        document.getElementById('animal-search').addEventListener('input', (e) => {
-            this.renderAnimals();
-        });
+        const searchInput = document.getElementById('animal-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => this.renderAnimals());
+        }
 
-        document.getElementById('animal-filter').addEventListener('change', () => {
-            this.renderAnimals();
-        });
+        const filterSelect = document.getElementById('animal-filter');
+        if (filterSelect) {
+            filterSelect.addEventListener('change', () => this.renderAnimals());
+        }
 
-        document.getElementById('gender-filter').addEventListener('change', () => {
-            this.renderAnimals();
-        });
+        const genderFilter = document.getElementById('gender-filter');
+        if (genderFilter) {
+            genderFilter.addEventListener('change', () => this.renderAnimals());
+        }
 
-        document.getElementById('age-filter').addEventListener('change', () => {
-            this.renderAnimals();
-        });
+        const ageFilter = document.getElementById('age-filter');
+        if (ageFilter) {
+            ageFilter.addEventListener('change', () => this.renderAnimals());
+        }
 
-        document.getElementById('clearSearch').addEventListener('click', () => {
-            document.getElementById('animal-search').value = '';
-            this.renderAnimals();
-        });
+        const clearBtn = document.getElementById('clearSearch');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                if (searchInput) searchInput.value = '';
+                this.renderAnimals();
+            });
+        }
 
-        document.getElementById('refreshDataBtn').addEventListener('click', () => {
-            this.loadAnimals();
-        });
+        const refreshBtn = document.getElementById('refreshDataBtn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => this.loadAnimals());
+        }
 
         // Barangay filter
-        document.getElementById('brgyToggle').addEventListener('click', () => {
-            this.toggleBarangayFilter();
-        });
+        const brgyToggle = document.getElementById('brgyToggle');
+        if (brgyToggle) {
+            brgyToggle.addEventListener('click', () => this.toggleBarangayFilter());
+        }
 
         document.querySelectorAll('.brgy-option').forEach(option => {
             option.addEventListener('click', (e) => {
@@ -95,107 +109,116 @@ class AdoptionApp {
         });
 
         // Main action buttons
-        document.getElementById('postAnimalBtn').addEventListener('click', () => {
-            this.checkAuthAndOpenPostForm();
-        });
+        const postAnimalBtn = document.getElementById('postAnimalBtn');
+        if (postAnimalBtn) {
+            postAnimalBtn.addEventListener('click', () => this.checkAuthAndOpenPostForm());
+        }
 
-        document.getElementById('myListingsBtn').addEventListener('click', () => {
-            this.switchTab('mylistings');
-        });
+        const myListingsBtn = document.getElementById('myListingsBtn');
+        if (myListingsBtn) {
+            myListingsBtn.addEventListener('click', () => this.switchTab('mylistings'));
+        }
 
-        document.getElementById('postFromEmptyBtn').addEventListener('click', () => {
-            this.checkAuthAndOpenPostForm();
-        });
+        const postFromEmptyBtn = document.getElementById('postFromEmptyBtn');
+        if (postFromEmptyBtn) {
+            postFromEmptyBtn.addEventListener('click', () => this.checkAuthAndOpenPostForm());
+        }
 
-        document.getElementById('browseFromEmptyBtn').addEventListener('click', () => {
-            this.switchTab('browse');
-        });
+        const browseFromEmptyBtn = document.getElementById('browseFromEmptyBtn');
+        if (browseFromEmptyBtn) {
+            browseFromEmptyBtn.addEventListener('click', () => this.switchTab('browse'));
+        }
 
         // Modal close buttons
-        document.getElementById('closeAnimalModal').addEventListener('click', () => {
-            this.closeAnimalModal();
-        });
+        const closeAnimalModal = document.getElementById('closeAnimalModal');
+        if (closeAnimalModal) closeAnimalModal.addEventListener('click', () => this.closeAnimalModal());
 
-        document.getElementById('closeAdoptionModal').addEventListener('click', () => {
-            this.closeAdoptionForm();
-        });
+        const closeAdoptionModal = document.getElementById('closeAdoptionModal');
+        if (closeAdoptionModal) closeAdoptionModal.addEventListener('click', () => this.closeAdoptionForm());
 
-        document.getElementById('closePostAnimalModal').addEventListener('click', () => {
-            this.closePostAnimalForm();
-        });
+        const closePostAnimalModal = document.getElementById('closePostAnimalModal');
+        if (closePostAnimalModal) closePostAnimalModal.addEventListener('click', () => this.closePostAnimalForm());
 
-        document.getElementById('closeSignInModal').addEventListener('click', () => {
-            this.closeSignInModal();
-        });
+        const closeSignInModal = document.getElementById('closeSignInModal');
+        if (closeSignInModal) closeSignInModal.addEventListener('click', () => this.closeSignInModal());
 
-        document.getElementById('closeSignUpModal').addEventListener('click', () => {
-            this.closeSignUpModal();
-        });
+        const closeSignUpModal = document.getElementById('closeSignUpModal');
+        if (closeSignUpModal) closeSignUpModal.addEventListener('click', () => this.closeSignUpModal());
 
-        document.getElementById('closeLetterModal').addEventListener('click', () => {
-            this.closeLetterModal();
-        });
+        const closeLetterModal = document.getElementById('closeLetterModal');
+        if (closeLetterModal) closeLetterModal.addEventListener('click', () => this.closeLetterModal());
 
         // Cancel buttons
-        document.getElementById('cancelAdoptionBtn').addEventListener('click', () => {
-            this.closeAdoptionForm();
-        });
+        const cancelAdoptionBtn = document.getElementById('cancelAdoptionBtn');
+        if (cancelAdoptionBtn) cancelAdoptionBtn.addEventListener('click', () => this.closeAdoptionForm());
 
-        document.getElementById('cancelPostAnimalBtn').addEventListener('click', () => {
-            this.closePostAnimalForm();
-        });
+        const cancelPostAnimalBtn = document.getElementById('cancelPostAnimalBtn');
+        if (cancelPostAnimalBtn) cancelPostAnimalBtn.addEventListener('click', () => this.closePostAnimalForm());
 
         // Form submissions
-        document.getElementById('adoption-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.submitAdoptionForm();
-        });
+        const adoptionForm = document.getElementById('adoption-form');
+        if (adoptionForm) {
+            adoptionForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.submitAdoptionForm();
+            });
+        }
 
-        document.getElementById('post-animal-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.submitPostAnimalForm();
-        });
+        const postAnimalForm = document.getElementById('post-animal-form');
+        if (postAnimalForm) {
+            postAnimalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.submitPostAnimalForm();
+            });
+        }
 
         // Auth buttons
-        document.getElementById('signInBtn').addEventListener('click', () => {
-            this.showSignInModal();
-        });
+        const signInBtn = document.getElementById('signInBtn');
+        if (signInBtn) signInBtn.addEventListener('click', () => this.showSignInModal());
 
-        document.getElementById('signOutBtn').addEventListener('click', () => {
-            this.signOut();
-        });
+        const signOutBtn = document.getElementById('signOutBtn');
+        if (signOutBtn) signOutBtn.addEventListener('click', () => this.signOut());
 
-        document.getElementById('submitSignInBtn').addEventListener('click', () => {
-            this.signIn();
-        });
+        const submitSignInBtn = document.getElementById('submitSignInBtn');
+        if (submitSignInBtn) submitSignInBtn.addEventListener('click', () => this.signIn());
 
-        document.getElementById('submitSignUpBtn').addEventListener('click', () => {
-            this.signUp();
-        });
+        const submitSignUpBtn = document.getElementById('submitSignUpBtn');
+        if (submitSignUpBtn) submitSignUpBtn.addEventListener('click', () => this.signUp());
 
-        document.getElementById('showSignUpLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.showSignUpModal();
-        });
+        const showSignUpLink = document.getElementById('showSignUpLink');
+        if (showSignUpLink) {
+            showSignUpLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showSignUpModal();
+            });
+        }
 
-        document.getElementById('showSignInLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.showSignInModal();
-        });
+        const showSignInLink = document.getElementById('showSignInLink');
+        if (showSignInLink) {
+            showSignInLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showSignInModal();
+            });
+        }
 
-        // Report button
-        document.getElementById('reportBtn').addEventListener('click', () => {
-            this.checkAuthAndOpenPostForm();
-        });
+        // --- FIX 2: Check if reportBtn exists before adding listener ---
+        const reportBtn = document.getElementById('reportBtn');
+        if (reportBtn) {
+            reportBtn.addEventListener('click', () => {
+                this.checkAuthAndOpenPostForm();
+            });
+        }
 
         // Letter modal buttons
-        document.getElementById('downloadLetterBtn').addEventListener('click', () => {
-            this.downloadApplicationLetter(currentApplicationId);
-        });
+        const downloadLetterBtn = document.getElementById('downloadLetterBtn');
+        if (downloadLetterBtn) {
+            downloadLetterBtn.addEventListener('click', () => this.downloadApplicationLetter(currentApplicationId));
+        }
 
-        document.getElementById('printLetterBtn').addEventListener('click', () => {
-            this.printLetter(currentApplicationId);
-        });
+        const printLetterBtn = document.getElementById('printLetterBtn');
+        if (printLetterBtn) {
+            printLetterBtn.addEventListener('click', () => this.printLetter(currentApplicationId));
+        }
 
         // Close modals when clicking outside
         window.addEventListener('click', (e) => {
@@ -208,6 +231,21 @@ class AdoptionApp {
     setupAuthListener() {
         auth.onAuthStateChanged((user) => {
             currentUser = user;
+            
+            // Sync with local storage on state change
+            if (user) {
+                // We construct a simple object to save
+                const userToSave = {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL
+                };
+                localStorage.setItem('currentUser', JSON.stringify(userToSave));
+            } else {
+                localStorage.removeItem('currentUser');
+            }
+            
             this.updateUIForUser(user);
         });
     }
@@ -220,29 +258,28 @@ class AdoptionApp {
         const signOutBtn = document.getElementById('signOutBtn');
 
         if (user) {
-            userName.textContent = user.displayName || user.email || 'User';
-            userAvatar.textContent = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
-            userRole.textContent = "Tree Planter & Rescuer";
-            signInBtn.style.display = 'none';
-            signOutBtn.style.display = 'block';
+            if (userName) userName.textContent = user.displayName || user.email || 'User';
+            if (userAvatar) userAvatar.textContent = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
+            if (userRole) userRole.textContent = "Tree Planter & Rescuer";
+            if (signInBtn) signInBtn.style.display = 'none';
+            if (signOutBtn) signOutBtn.style.display = 'block';
         } else {
-            userName.textContent = 'Guest';
-            userAvatar.textContent = 'G';
-            userRole.textContent = 'Please Sign In';
-            signInBtn.style.display = 'block';
-            signOutBtn.style.display = 'none';
+            if (userName) userName.textContent = 'Guest';
+            if (userAvatar) userAvatar.textContent = 'G';
+            if (userRole) userRole.textContent = 'Please Sign In';
+            if (signInBtn) signInBtn.style.display = 'block';
+            if (signOutBtn) signOutBtn.style.display = 'none';
         }
     }
 
     async loadAnimals() {
         const loadingState = document.getElementById('loadingState');
-        loadingState.style.display = 'block';
+        if (loadingState) loadingState.style.display = 'block';
 
         try {
             if (db) {
                 const snapshot = await db.collection('animals')
                     .where('status', '==', 'available')
-                   // .orderBy('createdAt', 'desc')
                     .get();
 
                 animalsData = [];
@@ -260,13 +297,13 @@ class AdoptionApp {
 
             this.updateStats();
             this.renderAnimals();
-            loadingState.style.display = 'none';
+            if (loadingState) loadingState.style.display = 'none';
         } catch (error) {
             console.error('Error loading animals:', error);
             animalsData = await this.loadSampleData();
             this.updateStats();
             this.renderAnimals();
-            loadingState.style.display = 'none';
+            if (loadingState) loadingState.style.display = 'none';
         }
     }
 
@@ -292,6 +329,8 @@ class AdoptionApp {
 
     renderAnimals() {
         const container = document.getElementById('animals-container');
+        if (!container) return;
+
         const filteredAnimals = this.getFilteredAnimals();
 
         if (filteredAnimals.length === 0) {
@@ -357,11 +396,20 @@ class AdoptionApp {
     }
 
     getFilteredAnimals() {
-        const searchTerm = document.getElementById('animal-search').value.toLowerCase();
-        const animalType = document.getElementById('animal-filter').value;
-        const gender = document.getElementById('gender-filter').value;
-        const ageFilter = document.getElementById('age-filter').value;
-        const activeBrgy = document.querySelector('.brgy-option.active')?.dataset.brgy || 'all';
+        const searchInput = document.getElementById('animal-search');
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        
+        const typeFilter = document.getElementById('animal-filter');
+        const animalType = typeFilter ? typeFilter.value : 'all';
+        
+        const genderFilter = document.getElementById('gender-filter');
+        const gender = genderFilter ? genderFilter.value : 'all';
+        
+        const ageFilter = document.getElementById('age-filter');
+        const ageVal = ageFilter ? ageFilter.value : 'all';
+        
+        const activeBrgyEl = document.querySelector('.brgy-option.active');
+        const activeBrgy = activeBrgyEl ? activeBrgyEl.dataset.brgy : 'all';
 
         return animalsData.filter(animal => {
             // Search filter
@@ -379,10 +427,10 @@ class AdoptionApp {
             // Barangay filter
             if (activeBrgy !== 'all' && animal.location !== activeBrgy) return false;
 
-            // Age filter (simplified)
-            if (ageFilter !== 'all') {
+            // Age filter
+            if (ageVal !== 'all') {
                 const age = parseFloat(animal.age) || 0;
-                switch (ageFilter) {
+                switch (ageVal) {
                     case 'baby': if (age > 1) return false; break;
                     case 'young': if (age <= 1 || age > 3) return false; break;
                     case 'adult': if (age <= 3 || age > 8) return false; break;
@@ -398,15 +446,25 @@ class AdoptionApp {
         const dogs = animalsData.filter(a => a.type === 'dog').length;
         const cats = animalsData.filter(a => a.type === 'cat').length;
 
-        document.getElementById('dogsCount').textContent = dogs;
-        document.getElementById('catsCount').textContent = cats;
-        document.getElementById('adoptionsCount').textContent = '0';
-        document.getElementById('volunteersCount').textContent = '25';
+        const dCount = document.getElementById('dogsCount');
+        const cCount = document.getElementById('catsCount');
+        
+        if (dCount) dCount.textContent = dogs;
+        if (cCount) cCount.textContent = cats;
+        
+        const aCount = document.getElementById('adoptionsCount');
+        if (aCount) aCount.textContent = '0';
+        
+        const vCount = document.getElementById('volunteersCount');
+        if (vCount) vCount.textContent = '25';
     }
 
     updatePaginationInfo(totalItems) {
-        document.getElementById('showingCount').textContent = totalItems;
-        document.getElementById('totalCount').textContent = totalItems;
+        const showCount = document.getElementById('showingCount');
+        const totalCount = document.getElementById('totalCount');
+        
+        if (showCount) showCount.textContent = totalItems;
+        if (totalCount) totalCount.textContent = totalItems;
     }
 
     viewAnimalDetails(animalId) {
@@ -419,40 +477,42 @@ class AdoptionApp {
         const nameEl = document.getElementById('modal-animal-name');
         const detailsEl = document.getElementById('modal-animal-details');
 
-        nameEl.textContent = animal.name;
+        if (nameEl) nameEl.textContent = animal.name;
 
-        const genderIcon = animal.gender === 'male' ? '♂' : '♀';
-        const typeIcon = animal.type === 'dog' ? '🐕' : '🐈';
+        if (detailsEl) {
+            detailsEl.innerHTML = `
+                <div class="animal-detail-view">
+                    <div class="animal-image-large" style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 60px; margin-bottom: 20px; border-radius: 8px;">
+                        <i class="fas fa-${animal.type}"></i>
+                    </div>
+                    <div class="animal-info-details">
+                        <p><strong>Type:</strong> ${animal.type}</p>
+                        <p><strong>Breed:</strong> ${animal.breed || 'Mixed breed'}</p>
+                        <p><strong>Age:</strong> ${animal.age || 'Unknown'}</p>
+                        <p><strong>Gender:</strong> ${animal.gender || 'Unknown'}</p>
+                        <p><strong>Location:</strong> ${animal.location || 'Olongapo City'}</p>
+                        <p><strong>Description:</strong> ${animal.description || 'No description provided'}</p>
+                        <p><strong>Posted by:</strong> ${animal.postedBy || 'Anonymous'}</p>
+                        <p><strong>Contact:</strong> ${animal.postedByEmail || 'Email not provided'}</p>
+                    </div>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn btn-primary" id="applyFromModalBtn">
+                            <i class="fas fa-heart"></i> Apply to Adopt ${animal.name}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
 
-        detailsEl.innerHTML = `
-            <div class="animal-detail-view">
-                <div class="animal-image-large" style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 60px; margin-bottom: 20px; border-radius: 8px;">
-                    <i class="fas fa-${animal.type}"></i>
-                </div>
-                <div class="animal-info-details">
-                    <p><strong>Type:</strong> ${animal.type}</p>
-                    <p><strong>Breed:</strong> ${animal.breed || 'Mixed breed'}</p>
-                    <p><strong>Age:</strong> ${animal.age || 'Unknown'}</p>
-                    <p><strong>Gender:</strong> ${animal.gender || 'Unknown'}</p>
-                    <p><strong>Location:</strong> ${animal.location || 'Olongapo City'}</p>
-                    <p><strong>Description:</strong> ${animal.description || 'No description provided'}</p>
-                    <p><strong>Posted by:</strong> ${animal.postedBy || 'Anonymous'}</p>
-                    <p><strong>Contact:</strong> ${animal.postedByEmail || 'Email not provided'}</p>
-                </div>
-                <div style="margin-top: 20px; text-align: center;">
-                    <button class="btn btn-primary" id="applyFromModalBtn">
-                        <i class="fas fa-heart"></i> Apply to Adopt ${animal.name}
-                    </button>
-                </div>
-            </div>
-        `;
-
-        modal.style.display = 'block';
+        if (modal) modal.style.display = 'block';
 
         // Add event listener to the apply button in modal
-        document.getElementById('applyFromModalBtn').addEventListener('click', () => {
-            this.openAdoptionForm(animalId);
-        });
+        const applyBtn = document.getElementById('applyFromModalBtn');
+        if (applyBtn) {
+            applyBtn.addEventListener('click', () => {
+                this.openAdoptionForm(animalId);
+            });
+        }
     }
 
     openAdoptionForm(animalId) {
@@ -462,26 +522,33 @@ class AdoptionApp {
         currentAnimalData = animal;
 
         const summary = document.getElementById('animalSummary');
-        summary.innerHTML = `
-            <div class="animal-summary-content">
-                <h4>You're applying to adopt: ${animal.name}</h4>
-                <p>${animal.type} • ${animal.breed || 'Mixed breed'} • ${animal.gender || 'Unknown'} • ${animal.age || 'Unknown age'}</p>
-            </div>
-        `;
+        if (summary) {
+            summary.innerHTML = `
+                <div class="animal-summary-content">
+                    <h4>You're applying to adopt: ${animal.name}</h4>
+                    <p>${animal.type} • ${animal.breed || 'Mixed breed'} • ${animal.gender || 'Unknown'} • ${animal.age || 'Unknown age'}</p>
+                </div>
+            `;
+        }
 
         // Pre-fill form with user data if available
         if (currentUser) {
             db.collection('users').doc(currentUser.uid).get().then(userDoc => {
                 if (userDoc.exists) {
                     const user = userDoc.data();
-                    document.getElementById('applicant-name').value = user.name || '';
-                    document.getElementById('applicant-email').value = user.email || '';
-                    document.getElementById('applicant-phone').value = user.phone || '';
+                    const nameInput = document.getElementById('applicant-name');
+                    const emailInput = document.getElementById('applicant-email');
+                    const phoneInput = document.getElementById('applicant-phone');
+                    
+                    if (nameInput) nameInput.value = user.name || '';
+                    if (emailInput) emailInput.value = user.email || '';
+                    if (phoneInput) phoneInput.value = user.phone || '';
                 }
             });
         }
 
-        document.getElementById('adoptionFormModal').style.display = 'block';
+        const modal = document.getElementById('adoptionFormModal');
+        if (modal) modal.style.display = 'block';
     }
 
     async submitAdoptionForm() {
@@ -732,14 +799,22 @@ TreeTails Olongapo Adoption Directory
         return true;
     }
 
+    // --- FIX 3: Robust Open Post Form with Fallbacks ---
     openPostAnimalForm() {
         // Pre-fill form with user data if available
         if (currentUser) {
-            document.getElementById('post-owner-name').value = currentUser.displayName || '';
-            document.getElementById('post-owner-email').value = currentUser.email || '';
+            // FIX: Use email or 'Volunteer' if the display name is missing
+            const fallbackName = currentUser.displayName || currentUser.email || 'TreeTails Volunteer';
+            
+            const nameField = document.getElementById('post-owner-name');
+            const emailField = document.getElementById('post-owner-email');
+            
+            if (nameField) nameField.value = fallbackName;
+            if (emailField) emailField.value = currentUser.email || '';
         }
 
-        document.getElementById('postAnimalModal').style.display = 'block';
+        const modal = document.getElementById('postAnimalModal');
+        if (modal) modal.style.display = 'block';
     }
 
     async submitPostAnimalForm() {
@@ -812,6 +887,8 @@ TreeTails Olongapo Adoption Directory
     loadMyApplications() {
         const container = document.getElementById('applicationsContainer');
         const emptyState = document.getElementById('emptyApplicationsState');
+        
+        if (!container || !emptyState) return;
 
         if (!currentUser) {
             container.innerHTML = `
@@ -827,9 +904,12 @@ TreeTails Olongapo Adoption Directory
             emptyState.style.display = 'none';
 
             // Add event listener to sign in button
-            document.getElementById('signInFromAppsBtn')?.addEventListener('click', () => {
-                this.showSignInModal();
-            });
+            const signInBtn = document.getElementById('signInFromAppsBtn');
+            if (signInBtn) {
+                signInBtn.addEventListener('click', () => {
+                    this.showSignInModal();
+                });
+            }
             return;
         }
 
@@ -920,6 +1000,8 @@ TreeTails Olongapo Adoption Directory
     loadMyListings() {
         const container = document.getElementById('myListingsContainer');
         const emptyState = document.getElementById('emptyListingsState');
+        
+        if (!container || !emptyState) return;
 
         if (!currentUser) {
             container.innerHTML = '';
@@ -1002,17 +1084,24 @@ TreeTails Olongapo Adoption Directory
     }
 
     closeAnimalModal() {
-        document.getElementById('animalModal').style.display = 'none';
+        const modal = document.getElementById('animalModal');
+        if (modal) modal.style.display = 'none';
     }
 
     closeAdoptionForm() {
-        document.getElementById('adoptionFormModal').style.display = 'none';
-        document.getElementById('adoption-form').reset();
+        const modal = document.getElementById('adoptionFormModal');
+        if (modal) modal.style.display = 'none';
+        
+        const form = document.getElementById('adoption-form');
+        if (form) form.reset();
     }
 
     closePostAnimalForm() {
-        document.getElementById('postAnimalModal').style.display = 'none';
-        document.getElementById('post-animal-form').reset();
+        const modal = document.getElementById('postAnimalModal');
+        if (modal) modal.style.display = 'none';
+        
+        const form = document.getElementById('post-animal-form');
+        if (form) form.reset();
     }
 
     switchTab(tabName) {
@@ -1051,26 +1140,35 @@ TreeTails Olongapo Adoption Directory
 
     // Auth Functions
     showSignInModal() {
-        document.getElementById('signInModal').style.display = 'block';
+        const modal = document.getElementById('signInModal');
+        if (modal) modal.style.display = 'block';
     }
 
     closeSignInModal() {
-        document.getElementById('signInModal').style.display = 'none';
-        document.getElementById('login-email').value = '';
-        document.getElementById('login-password').value = '';
+        const modal = document.getElementById('signInModal');
+        if (modal) modal.style.display = 'none';
+        
+        const email = document.getElementById('login-email');
+        const pass = document.getElementById('login-password');
+        if (email) email.value = '';
+        if (pass) pass.value = '';
     }
 
     showSignUpModal() {
         this.closeSignInModal();
-        document.getElementById('signUpModal').style.display = 'block';
+        const modal = document.getElementById('signUpModal');
+        if (modal) modal.style.display = 'block';
     }
 
     closeSignUpModal() {
-        document.getElementById('signUpModal').style.display = 'none';
-        document.getElementById('signup-name').value = '';
-        document.getElementById('signup-email').value = '';
-        document.getElementById('signup-password').value = '';
-        document.getElementById('signup-phone').value = '';
+        const modal = document.getElementById('signUpModal');
+        if (modal) modal.style.display = 'none';
+        
+        const ids = ['signup-name', 'signup-email', 'signup-password', 'signup-phone'];
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
     }
 
     async signIn() {
@@ -1163,8 +1261,11 @@ TreeTails Olongapo Adoption Directory
                 throw new Error("Application letter not found");
             }
 
-            document.getElementById('letterContent').textContent = letter;
-            document.getElementById('letterModal').style.display = 'block';
+            const content = document.getElementById('letterContent');
+            if (content) content.textContent = letter;
+            
+            const modal = document.getElementById('letterModal');
+            if (modal) modal.style.display = 'block';
 
         } catch (error) {
             console.error("Error showing letter:", error);
@@ -1266,12 +1367,15 @@ TreeTails Olongapo Adoption Directory
     }
 
     closeLetterModal() {
-        document.getElementById('letterModal').style.display = 'none';
+        const modal = document.getElementById('letterModal');
+        if (modal) modal.style.display = 'none';
         currentApplicationId = null;
     }
 
     showNotification(message, type = "info") {
         const container = document.getElementById('notificationContainer');
+        if (!container) return;
+
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         notification.innerHTML = `
