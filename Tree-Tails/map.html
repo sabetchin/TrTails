@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TreeTails - Olongapo City Green Spaces</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="m.css">
+    <style>
+        :root { --nav-height: 80px; }
+        @media (min-width: 1000px) {
+            nav { position: fixed; left:24px; top:24px; width:300px; height:calc(100vh - 48px); border-radius:18px; padding:20px; background: linear-gradient(180deg,#134E33,#0F7A5F); box-shadow:0 20px 60px rgba(9,20,18,0.18); }
+            .nav-container { height:100%; display:flex; flex-direction:column; gap:18px; align-items:stretch; }
+            .nav-links { display:flex; flex-direction:column; gap:10px; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.03); }
+            .nav-links li a { color: rgba(255,255,255,0.95); padding: 10px 12px; border-radius: 10px; }
+            .sidebar-profile { margin-top:6px; }
+            .profile-mini { display:flex; gap:12px; align-items:center; }
+            .profile-mini-avatar { width:54px; height:54px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); color:#fff; font-weight:700; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+            .report-btn { margin-top:12px; background: linear-gradient(90deg,#ffd166,#ff7a59); color:#123; font-weight:700; padding:10px 12px; border-radius:12px; display:flex; align-items:center; gap:10px; box-shadow:0 8px 24px rgba(0,0,0,0.12); }
+            .container { margin-left:360px; max-width: calc(100% - 380px); }
+        }
+        @media (max-width: 999px) {
+            nav { position: sticky; top:0; width:100%; height:var(--nav-height); border-radius:0; left:0; right:0; padding:0 18px; }
+            .container { margin-left:0; max-width:100%; padding-top:12px; }
+            .sidebar-profile, .report-btn { display:none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation - Updated to match bulletin style -->
+    <nav>
+        <div class="nav-container">
+            <a class="nav-brand" href="index.html">
+                <i class="fas fa-leaf"></i>
+                TreeTails
+            </a>
+            <div class="sidebar-profile" aria-hidden="false">
+                <div class="profile-mini">
+                    <div class="profile-mini-avatar">TL</div>
+                    <div class="profile-mini-info">
+                        <div class="profile-mini-name">testlang</div>
+                        <div class="profile-mini-role">Tree Planter & Rescuer</div>
+                    </div>
+                </div>
+                <button class="btn report-btn" id="reportBtn"><i class="fas fa-plus-circle"></i> Report New Rescue</button>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="bulletin.html"><i class="fas fa-bell"></i> Bulletin</a></li>
+                <li><a href="adoption.html"><i class="fas fa-heart"></i> Adoption</a></li>
+                <li><a href="map.html" class="active"><i class="fas fa-map"></i> Map</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🌳🐾</div>
+                <div class="logo-text">TreeTails Olongapo</div>
+            </div>
+            <p class="tagline">Green Spaces & Animal Rescue Map</p>
+            <p class="location">Making Olongapo City Cleaner and Greener, Together</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="treeCount">0</div>
+                <div class="stat-label">Tree Planting Sites</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="animalCount">0</div>
+                <div class="stat-label">Animal Rescue Locations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">Total Locations</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h2>Olongapo City Green Space & Animal Rescue Map</h2>
+            <div class="instruction-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Find Green Spaces</h4>
+                        <p>Browse tree planting locations and parks in Olongapo City</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Pin Tree Locations</h4>
+                        <p>Click "Add Tree Planting Site" to mark areas for reforestation</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Report Animal Rescue</h4>
+                        <p>Use "Pin Animal Rescue" to mark locations where animals need help</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>View Details</h4>
+                        <p>Click on map markers or sidebar items for more information</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-controls">
+            <div class="control-group">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search locations in Olongapo...">
+                <select class="filter-select" id="typeFilter">
+                    <option value="all">All Locations</option>
+                    <option value="tree">Tree Planting Sites</option>
+                    <option value="animal">Animal Rescue</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <button class="btn btn-primary" id="addTreeBtn">
+                    <i class="fas fa-tree"></i>
+                    Add Tree Planting Site
+                </button>
+                <button class="btn btn-animal" id="addAnimalBtn">
+                    <i class="fas fa-first-aid"></i>
+                    Pin Animal Rescue
+                </button>
+                <button class="btn btn-secondary" id="resetViewBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    Reset View
+                </button>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="map-sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-tree"></i> Tree Planting Sites</h3>
+                    <div class="location-list" id="treeLocations">
+                        <div class="empty-state">
+                            <i class="fas fa-tree"></i>
+                            <p>No tree planting sites added yet</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-paw"></i> Animal Rescue Locations</h3>
+                    <div class="location-list" id="animalLocations">
+                        <div class="empty-state">
+                            <i class="fas fa-paw"></i>
+                            <p>No animal rescue locations added yet</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-color legend-tree"></div>
+                        <span>Tree Planting Site</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-animal"></div>
+                        <span>Animal Rescue</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pin Mode Indicator -->
+    <div class="pin-mode-indicator" id="pinModeIndicator">
+        <i class="fas fa-map-pin"></i>
+        <span id="pinModeText">Click on the map to place a pin</span>
+        <button class="btn btn-secondary" id="cancelPinMode">Cancel</button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Add Tree Planting Site Modal -->
+    <div class="modal" id="treeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Tree Planting Site</h3>
+                <button class="close-modal" id="closeTreeModal">&times;</button>
+            </div>
+            <form id="treeForm">
+                <div class="form-group">
+                    <label for="treeLocationName">Location Name</label>
+                    <input type="text" id="treeLocationName" placeholder="e.g., Rizal Triangle Park" required>
+                </div>
+                <div class="form-group">
+                    <label for="treeDescription">Description</label>
+                    <textarea id="treeDescription" placeholder="Describe this location and why it's suitable for tree planting"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="treeType">Tree Type</label>
+                    <select id="treeType">
+                        <option value="narra">Narra (National Tree)</option>
+                        <option value="acacia">Acacia</option>
+                        <option value="mango">Mango</option>
+                        <option value="coconut">Coconut</option>
+                        <option value="mahogany">Mahogany</option>
+                        <option value="other">Other Native Species</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="treePriority">Planting Priority</label>
+                    <select id="treePriority">
+                        <option value="high">High - Urgent need for reforestation</option>
+                        <option value="medium">Medium - Would benefit from more trees</option>
+                        <option value="low">Low - Nice to have additional trees</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelTree">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Planting Site</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Animal Rescue Modal -->
+    <div class="modal" id="animalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Pin Animal Rescue Location</h3>
+                <button class="close-modal" id="closeAnimalModal">&times;</button>
+            </div>
+            <form id="animalForm">
+                <div class="form-group">
+                    <label for="animalType">Animal Type</label>
+                    <select id="animalType" required>
+                        <option value="">Select animal type</option>
+                        <option value="dog">Dog</option>
+                        <option value="cat">Cat</option>
+                        <option value="bird">Bird</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="animalCondition">Animal Condition</label>
+                    <select id="animalCondition" required>
+                        <option value="">Select condition</option>
+                        <option value="injured">Injured</option>
+                        <option value="sick">Sick/Weak</option>
+                        <option value="hungry">Hungry/Thin</option>
+                        <option value="lost">Lost Pet</option>
+                        <option value="stray">Healthy Stray</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="animalDescription">Description</label>
+                    <textarea id="animalDescription" placeholder="Describe the animal (color, size, behavior, etc.)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="animalUrgency">Rescue Urgency</label>
+                    <select id="animalUrgency">
+                        <option value="high">High - Immediate attention needed</option>
+                        <option value="medium">Medium - Should be addressed today</option>
+                        <option value="low">Low - Monitoring needed</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelAnimal">Cancel</button>
+                    <button type="submit" class="btn btn-animal">Pin Rescue Location</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="m.js"></script>
+</body>
+</html>

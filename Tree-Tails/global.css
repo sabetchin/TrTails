@@ -1,0 +1,87 @@
+/* global.css — extracted + unified styles based on index.html */
+
+/* ===== GLOBAL FONTS ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #f8f8f8;
+  color: #333;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  width: 100%;
+  background: #ffffff;
+  padding: 15px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2b6f3e;
+  text-decoration: none;
+}
+
+.nav-links a {
+  margin-left: 25px;
+  text-decoration: none;
+  font-size: 1rem;
+  color: #333;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  color: #2b6f3e;
+}
+
+/* ===== LAYOUT ===== */
+.page-content {
+  width: 90%;
+  margin: 40px auto;
+}
+
+/* ===== BUTTONS ===== */
+button, .btn {
+  padding: 10px 20px;
+  background: #2b6f3e;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover, .btn:hover {
+  background: #1f512c;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  margin-top: 60px;
+  background: #2b6f3e;
+  padding: 20px 0;
+  color: white;
+  text-align: center;
+}
+
+.footer-container {
+  width: 90%;
+  margin: auto;
+}

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TreeTails - Olongapo Adoption Directory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="a.css"> 
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <style>
+        /* --- STYLE OVERRIDES START --- */
+        
+        /* 1. Core Variables (Matches Index.html) */
+        :root {
+            --primary: #0f7a5f;
+            --primary-light: #16a085;
+            --primary-dark: #0b5b44;
+            --secondary: #ffd166;
+            --accent: #ff7a59;
+            --animal: #ffb04c;
+            --light: #f7fbf8;
+            --dark: #21303a;
+            --gray: #6b7b7f;
+            --light-gray: #eef3f1;
+            --white: #ffffff;
+            --shadow: 0 8px 24px rgba(15, 122, 95, 0.12);
+            --shadow-hover: 0 16px 48px rgba(15, 122, 95, 0.2);
+            --nav-width: 300px; /* Fixed width for sidebar */
+        }
+
+        /* 2. Global Resets */
+        * {
+            font-family: 'Inter', 'Segoe UI', sans-serif !important;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* 3. NAVIGATION / DASHBOARD FIXES */
+        
+        /* Desktop Sidebar Style */
+        @media (min-width: 1000px) {
+            nav {
+                position: fixed !important;
+                top: 24px !important;
+                left: 24px !important;
+                width: var(--nav-width) !important;
+                height: calc(100vh - 48px) !important;
+                background: linear-gradient(180deg, var(--primary-dark), var(--primary)) !important;
+                border-radius: 18px !important;
+                padding: 24px !important;
+                box-shadow: 0 20px 60px rgba(9, 20, 18, 0.18) !important;
+                z-index: 5000 !important; /* Ensure it stays on top */
+                display: block !important; /* Force visibility */
+                overflow-y: auto;
+            }
+
+            .container {
+                margin-left: 360px !important; /* Push content to right */
+                max-width: calc(100% - 380px) !important;
+                padding-top: 24px;
+            }
+
+            .nav-container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                gap: 20px;
+            }
+
+            .nav-links {
+                display: flex !important; /* Ensure links are visible */
+                flex-direction: column;
+                gap: 10px;
+                list-style: none;
+                padding: 0;
+            }
+        }
+
+        /* Mobile Navigation Style */
+        @media (max-width: 999px) {
+            nav {
+                position: sticky !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                background: var(--primary) !important;
+                padding: 15px 20px !important;
+                z-index: 5000 !important;
+                box-shadow: var(--shadow);
+            }
+
+            .container {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding: 20px;
+                max-width: 100% !important;
+            }
+
+            .nav-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+            
+            /* Horizontal scrolling menu for mobile */
+            .nav-links {
+                display: flex !important;
+                flex-direction: row;
+                width: 100%;
+                overflow-x: auto;
+                gap: 15px;
+                padding-top: 15px;
+                list-style: none;
+            }
+            
+            .sidebar-profile {
+                width: 100%;
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        /* 4. Link & Item Styles */
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .nav-links li a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links li a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        /* Profile Section in Sidebar */
+        .sidebar-profile {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: auto; /* Pushes to bottom on desktop */
+        }
+
+        .profile-mini {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .profile-mini-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .report-btn {
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            color: var(--dark);
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        /* --- END STYLE OVERRIDES --- */
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-paw"></i> TreeTails
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="bulletin.html"><i class="fas fa-bell"></i> Bulletin</a></li>
+                <li><a href="adoption.html" style="background: rgba(255,255,255,0.2); color:white;"><i class="fas fa-heart"></i> Adoption</a></li>
+                <li><a href="map.html"><i class="fas fa-map"></i> Map</a></li>
+            </ul>
+
+            <div class="sidebar-profile">
+                <div class="profile-mini">
+                    <div class="profile-mini-avatar" id="userAvatar">G</div>
+                    <div style="overflow: hidden;">
+                        <div style="font-weight:700; color:#fff; font-size:0.9rem; white-space: nowrap;" id="userName">Guest</div>
+                        <div id="userRole" style="color: rgba(255,255,255,0.7); font-size: 0.8rem;">Tap to Sign In</div>
+                    </div>
+                </div>
+                
+                <button class="btn report-btn" id="reportBtn">
+                    <i class="fas fa-plus-circle"></i> New Rescue
+                </button>
+                
+                <div id="authButtons" style="margin-top: 10px;">
+                    <button class="btn" id="signInBtn" style="width: 100%; background: rgba(255,255,255,0.2); color: white; justify-content: center;">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                    <button class="btn" id="signOutBtn" style="width: 100%; border: 1px solid rgba(255,255,255,0.4); background: transparent; color: white; justify-content: center; display: none;">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div style="margin-bottom: 30px;">
+            <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--primary-dark);">Find a Friend</h1>
+            <p style="color: var(--gray);">Adopt a rescue animal in Olongapo City</p>
+        </div>
+
+        <div style="background: var(--white); padding: 20px; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+            <select id="filterType" style="padding: 12px; border-radius: 8px; border: 1px solid #ddd; flex: 1;">
+                <option value="all">All Animals</option>
+                <option value="dog">Dogs</option>
+                <option value="cat">Cats</option>
+            </select>
+            <select id="filterAge" style="padding: 12px; border-radius: 8px; border: 1px solid #ddd; flex: 1;">
+                <option value="all">Any Age</option>
+                <option value="baby">Baby</option>
+                <option value="young">Young</option>
+                <option value="adult">Adult</option>
+                <option value="senior">Senior</option>
+            </select>
+            <button id="brgyToggle" class="btn btn-primary" style="background: white; color: var(--primary); border: 2px solid var(--primary);">
+                <i class="fas fa-map-marker-alt"></i> Filter Area
+            </button>
+        </div>
+
+        <div id="brgyGrid" style="display: none; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 30px;">
+            <div class="brgy-option" data-brgy="all" style="padding:10px; background:var(--primary); color:white; border-radius:8px; text-align:center; cursor:pointer;">All Areas</div>
+            <div class="brgy-option" data-brgy="Barreto" style="padding:10px; background:white; border-radius:8px; text-align:center; cursor:pointer;">Barreto</div>
+            <div class="brgy-option" data-brgy="Gordon Heights" style="padding:10px; background:white; border-radius:8px; text-align:center; cursor:pointer;">Gordon Heights</div>
+            <div class="brgy-option" data-brgy="Kalaklan" style="padding:10px; background:white; border-radius:8px; text-align:center; cursor:pointer;">Kalaklan</div>
+            <div class="brgy-option" data-brgy="West Bajac-Bajac" style="padding:10px; background:white; border-radius:8px; text-align:center; cursor:pointer;">West BB</div>
+        </div>
+
+        <div id="animalGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px;">
+            <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
+                <p style="margin-top: 10px; color: var(--gray);">Loading adoption listings...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="adoptModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9000; justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:16px; width:90%; max-width:500px; max-height:90vh; overflow-y:auto;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                <h3 id="modalAnimalName">Adopt</h3>
+                <span id="closeAdoptModal" style="cursor:pointer; font-size:1.5rem;">&times;</span>
+            </div>
+            <form id="adoptionForm">
+                <input type="text" id="applicant-name" placeholder="Full Name" required style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+                <input type="text" id="applicant-phone" placeholder="Phone" required style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+                <button type="submit" class="btn btn-primary" style="width:100%;">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="signUpModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9000; justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:16px; width:90%; max-width:400px;">
+            <h3>Sign Up</h3>
+            <input type="email" id="signup-email" placeholder="Email" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:8px;">
+            <input type="password" id="signup-password" placeholder="Password" style="width:100%; padding:10px; margin-bottom:20px; border:1px solid #ddd; border-radius:8px;">
+            <button class="btn btn-primary" id="submitSignUpBtn" style="width:100%;">Create Account</button>
+            <p style="text-align:center; margin-top:15px; cursor:pointer; color:var(--primary);" id="showSignInLink">Or Sign In</p>
+            <span id="closeSignUpModal" style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem; color:white;">&times;</span>
+        </div>
+    </div>
+    
+    <div class="modal" id="letterModal" style="display:none;"></div>
+
+    <script src="adoption.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TreeTails - Environmental Conservation & Animal Welfare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-dark: #1b5e20;
+            --secondary: #ff9800;
+            --light: #f5f5f5;
+            --dark: #333;
+            --gray: #757575;
+            --light-gray: #e0e0e0;
+            --white: #ffffff;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --success: #4caf50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo-icon {
+            font-size: 3.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo h1 {
+            color: var(--primary);
+            font-size: 3rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 40px;
+            width: 100%;
+            max-width: 1000px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .info-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 300px;
+            padding: 0 15px;
+        }
+
+        .info-section h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .info-section p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e68900;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .feature:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        .feature-text h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--primary-dark);
+        }
+
+        .feature-text p {
+            font-size: 0.9rem;
+            margin: 0;
+            color: var(--gray);
+        }
+
+        .auth-section {
+            flex: 1;
+            max-width: 450px;
+            display: none;
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .auth-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .auth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .auth-form {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon input {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-with-icon input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .input-icon:hover {
+            color: var(--primary);
+        }
+
+        .password-requirements {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .requirement-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .requirement-list {
+            list-style: none;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .requirement-item.valid {
+            color: var(--success);
+        }
+
+        .requirement-icon {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+
+        .requirement-icon.valid {
+            color: var(--success);
+        }
+
+        .requirement-icon.invalid {
+            color: var(--gray);
+        }
+
+        .password-strength {
+            margin-top: 15px;
+        }
+
+        .strength-meter {
+            height: 6px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .strength-text {
+            font-size: 0.8rem;
+            color: var(--gray);
+            text-align: right;
+        }
+
+        .strength-weak {
+            background-color: var(--danger);
+            width: 25%;
+        }
+
+        .strength-fair {
+            background-color: var(--warning);
+            width: 50%;
+        }
+
+        .strength-good {
+            background-color: #ffc107;
+            width: 75%;
+        }
+
+        .strength-strong {
+            background-color: var(--success);
+            width: 100%;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn:disabled {
+            background-color: var(--light-gray);
+            color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin: 20px 0;
+            color: var(--gray);
+        }
+
+        .link-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .form-help {
+            display: block;
+            margin-top: 5px;
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkmark {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--light-gray);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+            content: "✓";
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .link {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .auth-page {
+            display: none;
+        }
+
+        .auth-page.active {
+            display: block;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 10px 0;
+            align-self: flex-start;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            color: var(--primary-dark);
+            transform: translateX(-3px);
+        }
+
+        .verification-box {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .verification-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .verification-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .verification-text {
+            color: var(--gray);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .resend-link {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Alert Styles */
+        .auth-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            max-width: 400px;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+        .auth-alert-error { background-color: var(--danger); }
+        .auth-alert-success { background-color: var(--success); }
+        .auth-alert-info { background-color: #2196f3; }
+        .alert-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--dark);
+        }
+
+        .modal-content {
+            padding: 25px;
+        }
+
+        .modal-content h3 {
+            color: var(--primary);
+            margin: 20px 0 10px;
+            font-size: 1.2rem;
+        }
+
+        .modal-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .modal-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .modal-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content li {
+            margin-bottom: 8px;
+        }
+
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+            background-color: white;
+            border-radius: 0 0 15px 15px;
+        }
+
+        /* Animations */
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 900px) {
+            .content-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+            
+            .info-section, .auth-section {
+                width: 100%;
+                max-width: 500px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .auth-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo h1 {
+                font-size: 2.5rem;
+            }
+            
+            .logo-icon {
+                font-size: 3rem;
+            }
+            
+            .info-section h2 {
+                font-size: 1.8rem;
+            }
+            
+            .auth-box {
+                padding: 30px 25px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .modal-header {
+                padding: 15px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .auth-box {
+                padding: 25px 20px;
+            }
+            
+            .logo {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .logo h1 {
+                font-size: 2.2rem;
+            }
+            
+            .logo-icon {
+                font-size: 2.5rem;
+            }
+            
+            .auth-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+            
+            .modal {
+                width: 95%;
+            }
+            
+            .modal-header h2 {
+                font-size: 1.3rem;
+            }
+            
+            .modal-content h3 {
+                font-size: 1.1rem;
+            }
+            
+            .feature {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .feature-icon {
+                margin-bottom: 10px;
+            }
+            
+            .info-section h2 {
+                font-size: 1.6rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .auth-box {
+                padding: 20px 15px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .info-section h2 {
+                font-size: 1.4rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .modal-content {
+                padding: 15px;
+            }
+            
+            .modal-header {
+                padding: 12px 15px;
+            }
+            
+            .modal-header h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section">
+            <div class="logo">
+                <span class="logo-icon">🌳🐾</span>
+                <h1>TreeTails</h1>
+            </div>
+            <p class="tagline">Join our community of eco-warriors dedicated to environmental conservation and animal welfare</p>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="info-section">
+                <h2>Join TreeTails Today</h2>
+                <p>Start your journey towards environmental conservation and animal welfare. Connect with a community of eco-warriors dedicated to making a difference.</p>
+                
+                <div class="auth-buttons">
+                    <button class="btn btn-primary" onclick="showSignup()">Sign Up</button>
+                    <button class="btn btn-outline" onclick="showLogin()">Sign In</button>
+                </div>
+                
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Track Plants</h3>
+                            <p>Monitor your planting efforts and growth progress</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-paw"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Help Animals</h3>
+                            <p>Rescue and protect wildlife in your community</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Impact</h3>
+                            <p>See your environmental impact with detailed analytics</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h3>Community</h3>
+                            <p>Connect with like-minded eco-warriors worldwide</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-section" id="auth-section">
+                <!-- Back button to return to main view -->
+                <button class="back-button" onclick="hideAuth()">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </button>
+
+                <!-- Login Page -->
+                <div id="login-page" class="auth-page">
+                    <div class="auth-box">
+                        <div class="auth-header">
+                            <h2 class="auth-title">Sign In to TreeTails</h2>
+                        </div>
+                        <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label for="login-email">Email Address</label>
+                                <div class="input-with-icon">
+                                    <input type="email" id="login-email" required>
+                                    <i class="fas fa-envelope input-icon"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">Password</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="login-password" required>
+                                    <i class="fas fa-eye input-icon" id="login-password-toggle" onclick="togglePasswordVisibility('login-password', 'login-password-toggle')"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="link-btn" onclick="showForgotPassword()" style="padding: 0; margin-top: -10px;">
+                                    Forgot Password?
+                                </button>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+                        </form>
+                        <p class="auth-toggle">Don't have an account? <button class="link-btn" onclick="switchToSignup()">Sign Up</button></p>
+                    </div>
+                </div>
+
+                <!-- Signup Page -->
+                <div id="signup-page" class="auth-page">
+                    <div class="auth-box">
+                        <div class="auth-header">
+                            <h2 class="auth-title">Create Your Account</h2>
+                        </div>
+                        <form id="signup-form" class="auth-form" onsubmit="handleSignup(event)">
+                            <div class="form-group">
+                                <label for="signup-name">Full Name</label>
+                                <div class="input-with-icon">
+                                    <input type="text" id="signup-name" required>
+                                    <i class="fas fa-user input-icon"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="signup-email">Email Address</label>
+                                <div class="input-with-icon">
+                                    <input type="email" id="signup-email" required>
+                                    <i class="fas fa-envelope input-icon"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="signup-password">Password</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="signup-password" required minlength="6" oninput="checkPasswordRequirements()">
+                                    <i class="fas fa-eye input-icon" id="signup-password-toggle" onclick="togglePasswordVisibility('signup-password', 'signup-password-toggle')"></i>
+                                </div>
+                                
+                                <div class="password-requirements">
+                                    <div class="requirement-title">Password Requirements:</div>
+                                    <ul class="requirement-list">
+                                        <li class="requirement-item" id="req-length">
+                                            <span class="requirement-icon invalid"><i class="fas fa-times"></i></span>
+                                            At least 6 characters
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="password-strength">
+                                    <div class="strength-meter">
+                                        <div class="strength-fill" id="strength-meter-fill"></div>
+                                    </div>
+                                    <div class="strength-text" id="strength-text">Password strength: None</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="signup-confirm">Confirm Password</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="signup-confirm" required oninput="checkPasswordMatch()">
+                                    <i class="fas fa-eye input-icon" id="signup-confirm-toggle" onclick="togglePasswordVisibility('signup-confirm', 'signup-confirm-toggle')"></i>
+                                </div>
+                                <small class="form-help" id="password-match-text"></small>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="terms-agreement" required onchange="toggleSignupButton()">
+                                    <span class="checkmark"></span>
+                                    I agree to the <a href="#" class="link" onclick="showTermsModal()">Terms of Service</a> and <a href="#" class="link" onclick="showPrivacyModal()">Privacy Policy</a>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full" id="signup-button" disabled>Create Account</button>
+                        </form>
+                        <p class="auth-toggle">Already have an account? <button class="link-btn" onclick="switchToLogin()">Sign In</button></p>
+                    </div>
+                </div>
+
+                <!-- Forgot Password Page -->
+                <div id="forgot-password-page" class="auth-page">
+                    <div class="auth-box">
+                        <div class="auth-header">
+                            <h2 class="auth-title">Reset Your Password</h2>
+                        </div>
+                        <form id="forgot-password-form" class="auth-form" onsubmit="handleForgotPassword(event)">
+                            <div class="form-group">
+                                <label for="forgot-email">Email Address</label>
+                                <div class="input-with-icon">
+                                    <input type="email" id="forgot-email" required>
+                                    <i class="fas fa-envelope input-icon"></i>
+                                </div>
+                                <small class="form-help">We'll send a password reset link to your email</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">Send Reset Link</button>
+                        </form>
+                        <p class="auth-toggle">Remember your password? <button class="link-btn" onclick="switchToLogin()">Sign In</button></p>
+                    </div>
+                </div>
+
+                <!-- Reset Password Page -->
+                <div id="reset-password-page" class="auth-page">
+                    <div class="auth-box">
+                        <div class="auth-header">
+                            <h2 class="auth-title">Create New Password</h2>
+                        </div>
+                        <form id="reset-password-form" class="auth-form" onsubmit="handleResetPassword(event)">
+                            <div class="form-group">
+                                <label for="reset-password">New Password</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="reset-password" required minlength="6" oninput="checkResetPasswordRequirements()">
+                                    <i class="fas fa-eye input-icon" id="reset-password-toggle" onclick="togglePasswordVisibility('reset-password', 'reset-password-toggle')"></i>
+                                </div>
+                                
+                                <div class="password-requirements">
+                                    <div class="requirement-title">Password Requirements:</div>
+                                    <ul class="requirement-list">
+                                        <li class="requirement-item" id="reset-req-length">
+                                            <span class="requirement-icon invalid"><i class="fas fa-times"></i></span>
+                                            At least 6 characters
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="password-strength">
+                                    <div class="strength-meter">
+                                        <div class="strength-fill" id="reset-strength-meter-fill"></div>
+                                    </div>
+                                    <div class="strength-text" id="reset-strength-text">Password strength: None</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="reset-confirm">Confirm New Password</label>
+                                <div class="input-with-icon">
+                                    <input type="password" id="reset-confirm" required oninput="checkResetPasswordMatch()">
+                                    <i class="fas fa-eye input-icon" id="reset-confirm-toggle" onclick="togglePasswordVisibility('reset-confirm', 'reset-confirm-toggle')"></i>
+                                </div>
+                                <small class="form-help" id="reset-password-match-text"></small>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full" id="reset-button" disabled>Reset Password</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Email Verification Page -->
+                <div id="verification-page" class="auth-page">
+                    <div class="auth-box">
+                        <div class="verification-box">
+                            <div class="verification-icon">
+                                <i class="fas fa-envelope-open-text"></i>
+                            </div>
+                            <h2 class="verification-title">Verify Your Email</h2>
+                            <p class="verification-text">
+                                We've sent a verification link to <strong id="verification-email">your email address</strong>. 
+                                Please check your inbox and click the link to verify your account.
+                            </p>
+                            <button class="btn btn-primary" onclick="resendVerificationEmail()">Resend Verification Email</button>
+                            <p class="resend-link">
+                                Didn't receive the email? <button class="link-btn" onclick="resendVerificationEmail()">Click here to resend</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Reset Success Page -->
+                <div id="reset-success-page" class="auth-page">
+                    <div class="auth-box">
+                        <div class="verification-box">
+                            <div class="verification-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h2 class="verification-title">Password Reset Successful</h2>
+                            <p class="verification-text">
+                                Your password has been successfully reset. You can now sign in with your new password.
+                            </p>
+                            <button class="btn btn-primary" onclick="switchToLogin()">Sign In Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div class="modal-overlay" id="terms-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Terms of Service</h2>
+                <button class="modal-close" onclick="hideTermsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <h3>1. Acceptance of Terms</h3>
+                <p>By accessing and using TreeTails, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                
+                <h3>2. Use License</h3>
+                <p>Permission is granted to temporarily use TreeTails for personal, non-commercial purposes only. This is the grant of a license, not a transfer of title.</p>
+                
+                <h3>3. User Account</h3>
+                <p>When you create an account with us, you must provide information that is accurate, complete, and current at all times.</p>
+                
+                <h3>4. Content</h3>
+                <p>Our Service allows you to post, link, store, share and otherwise make available certain information, text, graphics, videos, or other material.</p>
+                
+                <h3>5. Termination</h3>
+                <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever.</p>
+                
+                <h3>6. Governing Law</h3>
+                <p>These Terms shall be governed and construed in accordance with the laws of your country, without regard to its conflict of law provisions.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="hideTermsModal()">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div class="modal-overlay" id="privacy-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Privacy Policy</h2>
+                <button class="modal-close" onclick="hidePrivacyModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <h3>1. Information We Collect</h3>
+                <p>We collect information you provide directly to us, such as when you create an account, update your profile, or use our services.</p>
+                
+                <h3>2. How We Use Your Information</h3>
+                <p>We use the information we collect to provide, maintain, and improve our services, to develop new ones, and to protect TreeTails and our users.</p>
+                
+                <h3>3. Sharing Your Information</h3>
+                <p>We do not share personal information with companies, organizations, or individuals outside of TreeTails except in the following cases:</p>
+                <ul>
+                    <li>With your consent</li>
+                    <li>For legal reasons</li>
+                    <li>With domain administrators</li>
+                </ul>
+                
+                <h3>4. Data Security</h3>
+                <p>We work hard to protect our users from unauthorized access to or unauthorized alteration, disclosure, or destruction of information we hold.</p>
+                
+                <h3>5. Your Rights</h3>
+                <p>You have the right to access, correct, or delete your personal information. You can also object to our use of your information.</p>
+                
+                <h3>6. Changes to This Policy</h3>
+                <p>We may change this privacy policy from time to time. We will post any privacy policy changes on this page.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="hidePrivacyModal()">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (compat builds to provide global `firebase` namespace) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDhn4Xgc4L1GLcpcR4ffvxjGIQKNuxrCYc",
+            authDomain: "treetails-7af34.firebaseapp.com",
+            projectId: "treetails-7af34",
+            storageBucket: "treetails-7af34.firebasestorage.app",
+            messagingSenderId: "469079945405",
+            appId: "1:469079945405:web:263b78fa028da2ebe107d4",
+            measurementId: "G-7QLXNT4DNG"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const analytics = firebase.analytics();
+    </script>
+
+    <script>
+        // Show/hide authentication section
+        function showAuth() {
+            document.getElementById('auth-section').classList.add('active');
+        }
+        
+        function hideAuth() {
+            document.getElementById('auth-section').classList.remove('active');
+        }
+        
+        // Show specific authentication form
+        function showLogin() {
+            showAuth();
+            document.getElementById('login-page').classList.add('active');
+            document.getElementById('signup-page').classList.remove('active');
+            document.getElementById('forgot-password-page').classList.remove('active');
+            document.getElementById('reset-password-page').classList.remove('active');
+            document.getElementById('verification-page').classList.remove('active');
+            document.getElementById('reset-success-page').classList.remove('active');
+        }
+        
+        function showSignup() {
+            showAuth();
+            document.getElementById('signup-page').classList.add('active');
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('forgot-password-page').classList.remove('active');
+            document.getElementById('reset-password-page').classList.remove('active');
+            document.getElementById('verification-page').classList.remove('active');
+            document.getElementById('reset-success-page').classList.remove('active');
+        }
+
+        function showForgotPassword() {
+            document.getElementById('forgot-password-page').classList.add('active');
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('signup-page').classList.remove('active');
+            document.getElementById('reset-password-page').classList.remove('active');
+            document.getElementById('verification-page').classList.remove('active');
+            document.getElementById('reset-success-page').classList.remove('active');
+        }
+
+        function showResetPassword() {
+            document.getElementById('reset-password-page').classList.add('active');
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('signup-page').classList.remove('active');
+            document.getElementById('forgot-password-page').classList.remove('active');
+            document.getElementById('verification-page').classList.remove('active');
+            document.getElementById('reset-success-page').classList.remove('active');
+        }
+
+        function showVerification(email) {
+            document.getElementById('verification-email').textContent = email;
+            document.getElementById('verification-page').classList.add('active');
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('signup-page').classList.remove('active');
+            document.getElementById('forgot-password-page').classList.remove('active');
+            document.getElementById('reset-password-page').classList.remove('active');
+            document.getElementById('reset-success-page').classList.remove('active');
+        }
+
+        function showResetSuccess() {
+            document.getElementById('reset-success-page').classList.add('active');
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('signup-page').classList.remove('active');
+            document.getElementById('forgot-password-page').classList.remove('active');
+            document.getElementById('reset-password-page').classList.remove('active');
+            document.getElementById('verification-page').classList.remove('active');
+        }
+
+        // Switch between login and signup forms
+        function switchToSignup() {
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('signup-page').classList.add('active');
+        }
+
+        function switchToLogin() {
+            document.getElementById('signup-page').classList.remove('active');
+            document.getElementById('login-page').classList.add('active');
+        }
+
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Check password requirements for signup (simplified)
+        function checkPasswordRequirements() {
+            const password = document.getElementById('signup-password').value;
+            
+            // Only check for minimum length (6 characters)
+            const hasMinLength = password.length >= 6;
+            
+            // Update requirement indicator
+            updateRequirementIndicator('req-length', hasMinLength);
+            
+            // Calculate password strength
+            calculatePasswordStrength(password, hasMinLength);
+            
+            // Enable/disable signup button based on requirements
+            toggleSignupButton();
+            
+            return hasMinLength;
+        }
+
+        // Check password requirements for reset (simplified)
+        function checkResetPasswordRequirements() {
+            const password = document.getElementById('reset-password').value;
+            
+            // Only check for minimum length (6 characters)
+            const hasMinLength = password.length >= 6;
+            
+            // Update requirement indicator
+            updateRequirementIndicator('reset-req-length', hasMinLength);
+            
+            // Calculate password strength
+            calculateResetPasswordStrength(password, hasMinLength);
+            
+            return hasMinLength;
+        }
+
+        // Update requirement indicator
+        function updateRequirementIndicator(elementId, isValid) {
+            const element = document.getElementById(elementId);
+            const icon = element.querySelector('.requirement-icon');
+            
+            if (isValid) {
+                element.classList.add('valid');
+                icon.classList.remove('invalid');
+                icon.classList.add('valid');
+                icon.innerHTML = '<i class="fas fa-check"></i>';
+            } else {
+                element.classList.remove('valid');
+                icon.classList.remove('valid');
+                icon.classList.add('invalid');
+                icon.innerHTML = '<i class="fas fa-times"></i>';
+            }
+        }
+
+        // Calculate password strength for signup (simplified)
+        function calculatePasswordStrength(password, hasMinLength) {
+            const meterFill = document.getElementById('strength-meter-fill');
+            const strengthText = document.getElementById('strength-text');
+            
+            // Reset classes
+            meterFill.className = 'strength-fill';
+            
+            if (password.length === 0) {
+                strengthText.textContent = 'Password strength: None';
+                meterFill.style.width = '0%';
+                return;
+            }
+            
+            // Determine strength level based on length only
+            if (password.length < 6) {
+                strengthText.textContent = 'Password strength: Weak';
+                meterFill.classList.add('strength-weak');
+            } else if (password.length < 10) {
+                strengthText.textContent = 'Password strength: Fair';
+                meterFill.classList.add('strength-fair');
+            } else if (password.length < 14) {
+                strengthText.textContent = 'Password strength: Good';
+                meterFill.classList.add('strength-good');
+            } else {
+                strengthText.textContent = 'Password strength: Strong';
+                meterFill.classList.add('strength-strong');
+            }
+        }
+
+        // Calculate password strength for reset (simplified)
+        function calculateResetPasswordStrength(password, hasMinLength) {
+            const meterFill = document.getElementById('reset-strength-meter-fill');
+            const strengthText = document.getElementById('reset-strength-text');
+            
+            // Reset classes
+            meterFill.className = 'strength-fill';
+            
+            if (password.length === 0) {
+                strengthText.textContent = 'Password strength: None';
+                meterFill.style.width = '0%';
+                return;
+            }
+            
+            // Determine strength level based on length only
+            if (password.length < 6) {
+                strengthText.textContent = 'Password strength: Weak';
+                meterFill.classList.add('strength-weak');
+            } else if (password.length < 10) {
+                strengthText.textContent = 'Password strength: Fair';
+                meterFill.classList.add('strength-fair');
+            } else if (password.length < 14) {
+                strengthText.textContent = 'Password strength: Good';
+                meterFill.classList.add('strength-good');
+            } else {
+                strengthText.textContent = 'Password strength: Strong';
+                meterFill.classList.add('strength-strong');
+            }
+        }
+
+        // Check if passwords match for signup
+        function checkPasswordMatch() {
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm').value;
+            const matchText = document.getElementById('password-match-text');
+            
+            if (confirmPassword.length === 0) {
+                matchText.textContent = '';
+                matchText.style.color = '';
+            } else if (password === confirmPassword) {
+                matchText.textContent = 'Passwords match';
+                matchText.style.color = 'var(--success)';
+            } else {
+                matchText.textContent = 'Passwords do not match';
+                matchText.style.color = 'var(--danger)';
+            }
+            
+            toggleSignupButton();
+        }
+
+        // Check if passwords match for reset
+        function checkResetPasswordMatch() {
+            const password = document.getElementById('reset-password').value;
+            const confirmPassword = document.getElementById('reset-confirm').value;
+            const matchText = document.getElementById('reset-password-match-text');
+            
+            if (confirmPassword.length === 0) {
+                matchText.textContent = '';
+                matchText.style.color = '';
+            } else if (password === confirmPassword) {
+                matchText.textContent = 'Passwords match';
+                matchText.style.color = 'var(--success)';
+            } else {
+                matchText.textContent = 'Passwords do not match';
+                matchText.style.color = 'var(--danger)';
+            }
+            
+            toggleResetButton();
+        }
+
+        // Toggle signup button state
+        function toggleSignupButton() {
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm').value;
+            const termsAgreed = document.getElementById('terms-agreement').checked;
+            
+            // Only check for minimum length (6 characters)
+            const hasMinLength = password.length >= 6;
+            const passwordRequirementsMet = hasMinLength;
+            
+            const passwordsMatch = password === confirmPassword && password.length > 0;
+            
+            const signupButton = document.getElementById('signup-button');
+            signupButton.disabled = !(passwordRequirementsMet && passwordsMatch && termsAgreed);
+        }
+
+        // Toggle reset button state
+        function toggleResetButton() {
+            const password = document.getElementById('reset-password').value;
+            const confirmPassword = document.getElementById('reset-confirm').value;
+            
+            const passwordRequirementsMet = checkResetPasswordRequirements();
+            const passwordsMatch = password === confirmPassword && password.length > 0;
+            
+            const resetButton = document.getElementById('reset-button');
+            resetButton.disabled = !(passwordRequirementsMet && passwordsMatch);
+        }
+
+        // Form submission handlers
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const loginBtn = document.querySelector('#login-form button[type="submit"]');
+            if (loginBtn) loginBtn.disabled = true;
+
+            // Validate inputs
+            if (!email || !password) {
+                showAlert('Please fill in all fields', 'error');
+                if (loginBtn) loginBtn.disabled = false;
+                return;
+            }
+            
+            // Firebase Authentication
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Sign in successful
+                    const user = userCredential.user;
+
+                    // Read user document from Firestore to ensure profile data is available
+                    return db.collection('users').doc(user.uid).get().then(doc => ({ user, doc }));
+                })
+                .then(({ user, doc }) => {
+                    const name = (doc && doc.exists) ? (doc.data().name || user.displayName || 'User') : (user.displayName || 'User');
+
+                    // Persist current user after Firestore read
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        id: user.uid,
+                        email: user.email,
+                        name: name
+                    }));
+
+                    showAlert('Successfully signed in! Redirecting to dashboard...', 'success');
+                    // Clear the form
+                    document.getElementById('login-form').reset();
+
+                    // Short delay so the user sees the success toast, then redirect
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 800);
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+
+                    console.error('Login error:', errorCode, errorMessage);
+
+                    if (errorCode === 'auth/user-not-found') {
+                        showAlert('No account found with this email. Please sign up first.', 'error');
+                    } else if (errorCode === 'auth/wrong-password') {
+                        showAlert('Invalid password. Please try again.', 'error');
+                    } else if (errorCode === 'auth/invalid-email') {
+                        showAlert('Invalid email address.', 'error');
+                    } else if (errorCode === 'auth/too-many-requests') {
+                        showAlert('Too many failed login attempts. Please try again later.', 'error');
+                    } else {
+                        showAlert(errorMessage || 'Login failed. Please try again.', 'error');
+                    }
+
+                    if (loginBtn) loginBtn.disabled = false;
+                });
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const signupBtn = document.getElementById('signup-button');
+            if (signupBtn) signupBtn.disabled = true;
+
+            // Validate all fields
+            if (!name || !email || !password) {
+                showAlert('Please fill in all fields', 'error');
+                if (signupBtn) signupBtn.disabled = false;
+                return;
+            }
+
+            // Firebase Authentication - Create user
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Account created successfully
+                    const user = userCredential.user;
+
+                    // Update user profile with name
+                    return user.updateProfile({ displayName: name }).then(() => user);
+                })
+                .then((user) => {
+                    // Save additional user data to Firestore
+                    return db.collection('users').doc(user.uid).set({
+                        uid: user.uid,
+                        name: name,
+                        email: email,
+                        createdAt: new Date().toISOString(),
+                        verified: true
+                    }).then(() => user);
+                })
+                .then((user) => {
+                    // Persist current user AFTER Firestore write
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        id: user.uid,
+                        email: user.email,
+                        name: name
+                    }));
+
+                    showAlert('Account created successfully! Redirecting to dashboard...', 'success');
+                    // Clear form
+                    document.getElementById('signup-form').reset();
+
+                    // Short delay so the user sees the success toast, then redirect
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+
+                    if (errorCode === 'auth/email-already-in-use') {
+                        showAlert('Email already registered. Please use a different email or sign in.', 'error');
+                    } else if (errorCode === 'auth/weak-password') {
+                        showAlert('Password is too weak. Please use a stronger password.', 'error');
+                    } else if (errorCode === 'auth/invalid-email') {
+                        showAlert('Invalid email address.', 'error');
+                    } else {
+                        showAlert(errorMessage, 'error');
+                    }
+
+                    if (signupBtn) signupBtn.disabled = false;
+                });
+        }
+
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('forgot-email').value;
+            
+            // Firebase Authentication - Send password reset email
+            firebase.auth().sendPasswordResetEmail(email)
+                .then(() => {
+                    showAlert('Password reset link sent to your email!', 'success');
+                    // Show reset form after a delay
+                    setTimeout(() => {
+                        showResetPassword();
+                    }, 2000);
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    
+                    if (errorCode === 'auth/user-not-found') {
+                        showAlert('No account found with this email address.', 'error');
+                    } else if (errorCode === 'auth/invalid-email') {
+                        showAlert('Invalid email address.', 'error');
+                    } else {
+                        showAlert(errorMessage, 'error');
+                    }
+                });
+        }
+
+        function handleResetPassword(event) {
+            event.preventDefault();
+            const password = document.getElementById('reset-password').value;
+            
+            // Get the current user
+            const user = firebase.auth().currentUser;
+            
+            if (user) {
+                // Update password for the current user
+                user.updatePassword(password)
+                    .then(() => {
+                        showResetSuccess();
+                        showAlert('Password reset successfully!', 'success');
+                    })
+                    .catch((error) => {
+                        showAlert('Error resetting password. Please try again.', 'error');
+                    });
+            } else {
+                showAlert('Please sign in to reset your password.', 'error');
+            }
+        }
+
+        function resendVerificationEmail() {
+            const user = firebase.auth().currentUser;
+            
+            if (user) {
+                user.sendEmailVerification()
+                    .then(() => {
+                        showAlert('Verification email sent! Please check your inbox.', 'success');
+                    })
+                    .catch((error) => {
+                        showAlert('Error sending verification email. Please try again.', 'error');
+                    });
+            } else {
+                showAlert('Please sign in to resend verification email.', 'error');
+            }
+        }
+
+        // Modal functions
+        function showTermsModal() {
+            document.getElementById('terms-modal').classList.add('active');
+        }
+
+        function hideTermsModal() {
+            document.getElementById('terms-modal').classList.remove('active');
+        }
+
+        function showPrivacyModal() {
+            document.getElementById('privacy-modal').classList.add('active');
+        }
+
+        function hidePrivacyModal() {
+            document.getElementById('privacy-modal').classList.remove('active');
+        }
+
+        // Alert system
+        function showAlert(message, type) {
+            // Remove any existing alerts
+            const existingAlert = document.querySelector('.auth-alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            // Create new alert
+            const alert = document.createElement('div');
+            alert.className = `auth-alert auth-alert-${type}`;
+            alert.innerHTML = `
+                <span>${message}</span>
+                <button class="alert-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            document.body.appendChild(alert);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (alert.parentElement) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            const termsModal = document.getElementById('terms-modal');
+            const privacyModal = document.getElementById('privacy-modal');
+            
+            if (event.target === termsModal) {
+                hideTermsModal();
+            }
+            
+            if (event.target === privacyModal) {
+                hidePrivacyModal();
+            }
+        });
+
+        // Check if user is already logged in and redirect to index.html
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
+                localStorage.setItem('currentUser', JSON.stringify({
+                    id: user.uid,
+                    email: user.email,
+                    name: user.displayName || 'User'
+                }));
+            } else {
+                // User is signed out
+                localStorage.removeItem('currentUser');
+            }
+        });
+    </script>
+</body>
+</html>

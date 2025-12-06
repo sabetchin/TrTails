@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TreeTails - Community Tree Planting & Animal Rescue</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            /* Brighter, playful palette */
+            --primary: #0f7a5f;
+            --primary-light: #16a085;
+            --primary-dark: #0b5b44;
+            --secondary: #ffd166;
+            --accent: #ff7a59;
+            --animal: #ffb04c;
+            --light: #f7fbf8;
+            --dark: #21303a;
+            --gray: #6b7b7f;
+            --light-gray: #eef3f1;
+            --white: #ffffff;
+            --shadow: 0 8px 24px rgba(16, 24, 32, 0.08);
+            --shadow-hover: 0 16px 48px rgba(16, 24, 32, 0.12);
+            --radius: 14px;
+            --transition: all 0.28s cubic-bezier(.2,.9,.3,1);
+            --nav-height: 80px;
+        }
+
+        /* Playful accents */
+        .floating-blob {
+            position: absolute;
+            right: -80px;
+            top: -40px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle at 30% 30%, rgba(255,122,89,0.18), rgba(255,217,102,0.06));
+            filter: blur(24px);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: rotate(12deg);
+            z-index: 0;
+        }
+
+        /* Stat icon animation */
+        .home-stat-icon { transition: transform 420ms var(--transition), box-shadow 420ms; }
+        .home-stat-card:hover .home-stat-icon { transform: translateY(-6px) rotate(-6deg) scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+
+        /* Chat button pulse */
+        @keyframes pulse {
+            0% { box-shadow: 0 8px 20px rgba(16,24,32,0.12); transform: scale(1); }
+            50% { box-shadow: 0 18px 40px rgba(16,24,32,0.16); transform: scale(1.06); }
+            100% { box-shadow: 0 8px 20px rgba(16,24,32,0.12); transform: scale(1); }
+        }
+
+        .chat-bot-button { animation: pulse 3.6s ease-in-out infinite; }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        /* Make images responsive by default */
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* Navigation */
+        nav {
+            background-color: var(--primary);
+            padding: 0 20px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--nav-height);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 0;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 70px;
+            line-height: 70px;
+            position: relative;
+        }
+
+        .nav-links li a:hover, .nav-links li a.active {
+            border-bottom-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--secondary);
+            transition: var(--transition);
+        }
+
+        .nav-links li a:hover::after, .nav-links li a.active::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* User Account Section */
+        .user-account {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--white);
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--light-gray);
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 34px 28px;
+            border-radius: var(--radius);
+            margin-bottom: 26px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path fill="white" d="M20,20 C40,0 60,0 80,20 C100,40 100,60 80,80 C60,100 40,100 20,80 C0,60 0,40 20,20 Z"/></svg>');
+            background-size: 200px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-icon {
+            font-size: 1.45rem;
+            width: 64px;
+            height: 64px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(255,122,89,0.12), rgba(16,160,128,0.08));
+            box-shadow: 0 8px 24px rgba(16,24,32,0.06);
+            transform: translateZ(0);
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--white);
+            text-shadow: 0 3px 10px rgba(0,0,0,0.12);
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .location {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.9);
+            margin-top: 6px;
+            z-index: 1;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 26px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow);
+            color: var(--dark);
+            background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(16,24,32,0.08);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray);
+            color: var(--white);
+        }
+
+        /* Home Page Styles */
+        .home-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+            margin-bottom: 26px;
+        }
+
+        .home-stat-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .home-stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        .home-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .home-stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%);
+            color: white;
+        }
+
+        .home-stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .home-stat-label {
+            font-size: 0.95rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        /* Profile Card Styles */
+        .profile-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .profile-info h1 {
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .profile-info p {
+            color: var(--gray);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge.animal {
+            background: var(--animal);
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--light-gray);
+            margin: 20px 0;
+        }
+
+        .contribution-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: var(--radius);
+        }
+
+        .contribution-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contribution-content h4 {
+            margin: 0 0 5px 0;
+        }
+
+        .contribution-content p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .event-item {
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .event-item h4 {
+            margin: 0 0 5px 0;
+            color: var(--primary);
+        }
+
+        .event-item p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .stats-mini {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .stat-mini {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-mini-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-mini-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* About Section Styles */
+        .about-section {
+            margin-top: 30px;
+        }
+
+        .about-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .about-tab {
+            padding: 10px 20px;
+            background: var(--light-gray);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .about-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .about-content {
+            display: none;
+        }
+
+        .about-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .about-content h2 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .about-content p {
+            margin-bottom: 15px;
+            color: var(--gray);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: var(--light-gray);
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: minmax(240px, 360px) 1fr;
+            gap: 25px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* Chat Widget - single canonical container (fixed, bottom-right) */
+        .chat-bot-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1200;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+            pointer-events: none; /* container doesn't capture clicks; children do */
+        }
+
+        .chat-bot-button {
+            pointer-events: auto;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            cursor: pointer;
+            border: none;
+        }
+
+        .chat-bot-window {
+            pointer-events: none;
+            width: 360px;
+            max-width: calc(100vw - 32px);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+            overflow: hidden;
+            flex-direction: column;
+            z-index: 1110;
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(8px) scale(0.99);
+            transition: opacity 220ms ease, transform 220ms ease, visibility 220ms;
+        }
+
+        .chat-bot-window.open {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .chat-bot-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .chat-bot-title { display:flex; align-items:center; gap:10px; font-weight:700; }
+
+        .chat-bot-close { background:none; border:none; color: #fff; font-size:18px; cursor:pointer; }
+
+        .chat-bot-messages {
+            padding: 16px;
+            max-height: 320px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: transparent;
+        }
+
+        .message { display: inline-block; padding: 12px 14px; border-radius: 12px; font-size:14px; line-height:1.5; max-width: 85%; }
+
+        .bot-message { background: #eef6f9; color: var(--dark); align-self: flex-start; border-radius: 12px 12px 12px 6px; }
+
+        .user-message { background: var(--primary); color: #fff; align-self: flex-end; border-radius: 12px 12px 6px 12px; }
+
+        .quick-questions { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+        .quick-question { background: transparent; border: none; text-align: left; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-weight:600; color: var(--dark); }
+
+        .quick-question:hover { background: rgba(0,0,0,0.03); }
+
+        .chat-bot-input { padding: 12px 16px; border-top: 1px solid #f1f1f1; display: flex; gap: 10px; align-items: center; background: #fff; }
+
+        .chat-bot-input input { flex: 1; padding: 12px 16px; border-radius: 999px; border: 1px solid #eee; outline: none; background: #fbfbfb; }
+
+        .chat-bot-input button { width:44px; height:44px; border-radius: 50%; background: var(--primary); color: #fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+
+        /* camera button style */
+        .chat-bot-input .chat-camera-btn { background: #fff; color: var(--primary); border: 1px solid #eee; box-shadow: none; }
+
+        /* Layout improvements */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .header .logo {
+            margin-bottom: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-compact {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            border-radius: 10px;
+        }
+
+        .profile-card .badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Make grid-2 prioritize profile width on desktop (responsive) */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: minmax(240px, 360px) 1fr;
+            gap: 25px;
+        }
+
+        /* small-screen tweak: keep chat near edges but still usable */
+        @media (max-width: 480px) {
+            .chat-bot-container { right: 12px; bottom: 12px; }
+        }
+
+        .chat-bot-button {
+            width: 56px;
+            height: 56px;
+        }
+
+        @media (max-width: 992px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-bot-container { right: 10px; bottom: 10px; }
+            .chat-bot-window { width: calc(100vw - 20px); right: 0; left: auto; }
+            .header { flex-direction: column; align-items: flex-start; }
+            .header .logo { width: 100%; }
+            .header-actions { width: 100%; justify-content: flex-end; }
+        }
+
+        /* When narrow screens, keep sidebar behavior fluid: make nav top bar instead */
+        @media (max-width: 999px) {
+            nav { position: sticky; top: 0; width: 100%; height: var(--nav-height); border-radius: 0; left: 0; right: 0; padding: 0 18px; }
+            .container { margin-left: 0; max-width: 100%; padding-top: 12px; }
+            .nav-container { flex-direction: row; align-items: center; height: var(--nav-height); }
+            .nav-links { display: flex; gap: 8px; background: rgba(255,255,255,0.03); border-radius: 50px; padding: 8px; }
+            .sidebar-profile, .report-btn { display: none; }
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-question {
+            background: var(--light-gray);
+            border: none;
+            border-radius: 15px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quick-question:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            background: var(--light-gray);
+            border-radius: 18px;
+            align-self: flex-start;
+            margin-bottom: 5px;
+            max-width: 60px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Logout Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            display: none;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-hover);
+        }
+
+        .modal h2 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .modal p {
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .logo {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .logo-text {
+                font-size: 28px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                height: auto;
+                padding: 15px 0;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+                display: none;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li a {
+                height: auto;
+                line-height: normal;
+                padding: 10px;
+            }
+            
+            .user-account {
+                margin-top: 15px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+
+            /* When menu active on small screens, stack vertically */
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                background: transparent;
+                padding: 8px 0 12px 0;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat-bot-window {
+                width: 300px;
+                height: 400px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Tighter mobile adjustments */
+            .logo-text { font-size: 18px; }
+            .nav-links li a { padding: 10px 14px; }
+            .btn { padding: 12px 16px; }
+            .chat-bot-window { width: calc(100vw - 24px); max-height: calc(100vh - 160px); }
+            .chat-bot-input button { width: 48px; height: 48px; }
+            .profile-avatar { width: 64px; height: 64px; font-size: 1.6rem; }
+            .home-stat-icon { width: 52px; height: 52px; }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .chat-bot-window {
+                width: calc(100vw - 40px);
+                right: -10px;
+            }
+        }
+
+        /* NOTE: removed heavy-handed !important override in favor of a single consistent rule above */
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Override navbar to match `map.html` styles */
+        nav {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 0 20px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(6px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--nav-height);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .nav-brand i { font-size: 1.8rem; }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50px;
+            padding: 8px;
+            backdrop-filter: blur(6px);
+        }
+
+        .nav-links li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 50px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links li a:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+
+        .nav-links li a.active {
+            background: rgba(255,255,255,0.18);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+        }
+
+        /* Layout fixes: remove gap under sticky nav and make header sit flush */
+        body { padding-top: 0; }
+
+        /* Reduce top margin so header sits just below nav */
+        .container { padding-top: 18px; }
+
+        .header {
+            margin-top: 8px;
+            border-radius: 0 0 var(--radius) var(--radius);
+            padding: 28px 28px;
+        }
+
+        /* Ensure sticky nav doesn't overlap content when using anchor links */
+        :root { --nav-height: 80px; }
+        main, .container { scroll-margin-top: var(--nav-height); }
+
+        /* Center brand on small screens and make links stack neatly */
+        @media (max-width: 768px) {
+            .nav-container { height: auto; padding: 14px 20px; flex-direction: column; gap: 10px; }
+            .nav-brand { justify-content: center; width: 100%; }
+            .nav-links { justify-content: center; }
+            .container { padding-top: 12px; }
+        }
+
+        /* Desktop: convert top nav into a left sidebar (desktop-only) */
+        @media (min-width: 1000px) {
+            nav {
+                position: fixed;
+                left: 24px;
+                top: 24px;
+                width: 300px;
+                height: calc(100vh - 48px);
+                border-radius: 18px;
+                padding: 20px;
+                background: linear-gradient(180deg, var(--primary-dark), var(--primary));
+                box-shadow: 0 20px 60px rgba(9,20,18,0.18);
+            }
+
+            .nav-container { height: 100%; display:flex; flex-direction:column; gap:18px; align-items:stretch; }
+
+            .nav-brand { font-size: 1.2rem; display:flex; align-items:center; gap:12px; color:var(--white); }
+
+            .sidebar-profile { margin-top: 6px; }
+            .profile-mini { display:flex; gap:12px; align-items:center; padding:8px 4px; }
+            .profile-mini-avatar { width:54px; height:54px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); color:var(--white); font-weight:700; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+            .profile-mini-name { color:var(--white); font-weight:700; }
+            .profile-mini-role { color: rgba(255,255,255,0.8); font-size:0.85rem; }
+
+            .report-btn { margin-top: 12px; background: linear-gradient(90deg, var(--secondary), var(--accent)); color: #123; font-weight:700; padding:10px 12px; border-radius:12px; display:flex; align-items:center; gap:10px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+            .nav-links { display:flex; flex-direction:column; gap:10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.03); }
+
+            .nav-links li a { color: rgba(255,255,255,0.95); padding: 10px 12px; border-radius: 10px; }
+
+            /* shift main page content to the right so it doesn't underlap the sidebar */
+            .container { margin-left: 360px; max-width: calc(100% - 380px); }
+        }
+
+        /* Colorful stat cards (playful pastels) */
+        .home-stats .home-stat-card:nth-child(1) { background: linear-gradient(135deg, #e6fbf3 0%, #ffffff 100%); }
+        .home-stats .home-stat-card:nth-child(2) { background: linear-gradient(135deg, #fff8e6 0%, #ffffff 100%); }
+        .home-stats .home-stat-card:nth-child(3) { background: linear-gradient(135deg, #f0f6ff 0%, #ffffff 100%); }
+        .home-stats .home-stat-card:nth-child(4) { background: linear-gradient(135deg, #fff0f4 0%, #ffffff 100%); }
+        .home-stats .home-stat-card { border-radius: 14px; padding: 22px; box-shadow: 0 12px 30px rgba(8,18,16,0.06); }
+        .home-stat-value { font-size: 2rem; color: var(--dark); }
+        .home-stat-label { color: rgba(33,48,58,0.7); }
+
+        /* Make the big page title feel large and airy */
+        .logo-text { font-size: 36px; }
+        .header { padding: 36px 32px; border-radius: 14px; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a class="nav-brand" href="index.html">
+                <i class="fas fa-leaf"></i>
+                TreeTails
+            </a>
+            <div class="sidebar-profile" aria-hidden="false">
+                <div class="profile-mini">
+                    <div class="profile-mini-avatar">TL</div>
+                    <div class="profile-mini-info">
+                        <div class="profile-mini-name">testlang</div>
+                        <div class="profile-mini-role">Tree Planter & Rescuer</div>
+                    </div>
+                </div>
+                <button class="btn report-btn" id="reportBtn"><i class="fas fa-plus-circle"></i> Report New Rescue</button>
+            </div>
+            <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Toggle navigation">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="bulletin.html"><i class="fas fa-bell"></i> Bulletin</a></li>
+                <li><a href="adoption.html"><i class="fas fa-heart"></i> Adoption</a></li>
+                <li><a href="map.html"><i class="fas fa-map"></i> Map</a></li>
+                <li><a href="login.html" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Home Page Content -->
+        <div class="page-content active" id="home-page">
+            <div class="header">
+                <div class="floating-blob" aria-hidden="true"></div>
+                <div class="logo">
+                    <div class="logo-icon">🌳🐾</div>
+                    <div class="logo-text">TreeTails Olongapo</div>
+                </div>
+                <p class="tagline">Community Tree Planting & Animal Rescue Dashboard</p>
+                <p class="location">Making Olongapo City Cleaner and Greener, Together</p>
+            </div>
+
+            <div class="home-stats">
+                <div class="home-stat-card">
+                    <div class="home-stat-icon">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <div class="home-stat-value">120</div>
+                    <div class="home-stat-label">Tree Planting Sites</div>
+                </div>
+                <div class="home-stat-card">
+                    <div class="home-stat-icon">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    <div class="home-stat-value">58</div>
+                    <div class="home-stat-label">Active Animal Rescues</div>
+                </div>
+                <div class="home-stat-card">
+                    <div class="home-stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="home-stat-value">3,200</div>
+                    <div class="home-stat-label">Registered Volunteers</div>
+                </div>
+                <div class="home-stat-card">
+                    <div class="home-stat-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="home-stat-value">156</div>
+                    <div class="home-stat-label">Successful Adoptions</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <!-- User Profile Card -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">TL</div>
+                        <div class="profile-info">
+                            <h1>testlang</h1>
+                            <p><i class="fas fa-map-marker-alt"></i> Olongapo City, Philippines</p>
+                            <p><i class="fas fa-user-tag"></i> Community Member since 2023</p>
+                            <div class="badges">
+                                <span class="badge">
+                                    <i class="fas fa-seedling"></i> Tree Planter
+                                </span>
+                                <span class="badge animal">
+                                    <i class="fas fa-paw"></i> Animal Rescuer
+                                </span>
+                                <button class="btn btn-primary btn-compact" id="openAiModalBtn">
+                                    <i class="fas fa-image"></i> Analyze Photo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <h3>Recent Contributions</h3>
+                    <div class="contribution-item">
+                        <div class="contribution-icon" style="background: var(--primary);">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <div class="contribution-content">
+                            <h4>Planted 5 trees</h4>
+                            <p>Rizal Park - 2 days ago</p>
+                        </div>
+                    </div>
+                    <div class="contribution-item">
+                        <div class="contribution-icon" style="background: var(--animal);">
+                            <i class="fas fa-cat"></i>
+                        </div>
+                        <div class="contribution-content">
+                            <h4>Rescued a cat</h4>
+                            <p>New Cabalan - 1 week ago</p>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <h3>Upcoming Events</h3>
+                    <div class="event-item">
+                        <h4>Tree Planting</h4>
+                        <p>Rizal Triangle Park</p>
+                    </div>
+                    <div class="event-item">
+                        <h4>Rescue Workshop</h4>
+                        <p>Community Center</p>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="stats-mini">
+                        <div class="stat-mini">
+                            <div class="stat-mini-value">12</div>
+                            <div class="stat-mini-label">Volunteer Hours</div>
+                        </div>
+                        <div class="stat-mini">
+                            <div class="stat-mini-value">3</div>
+                            <div class="stat-mini-label">Adoptions Facilitated</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About TreeTails Card -->
+                <div class="card">
+                    <h2 style="margin-bottom: 20px; color: var(--primary);">About TreeTails</h2>
+                    
+                    <div class="about-tabs">
+                        <div class="about-tab active" data-tab="what">What is TreeTails?</div>
+                        <div class="about-tab" data-tab="mission">Our Mission</div>
+                        <div class="about-tab" data-tab="features">Features</div>
+                    </div>
+                    
+                    <div class="about-content active" id="what-content">
+                        <h2>What is TreeTails?</h2>
+                        <p>TreeTails is a community-driven platform that connects environmental conservation with animal welfare in Olongapo City. We bring together volunteers, organizations, and residents to create a cleaner, greener, and more compassionate city.</p>
+                        <p>Our platform serves as a central hub for coordinating tree planting initiatives, animal rescue operations, and community engagement activities.</p>
+                        
+                        <div class="divider"></div>
+                        
+                        <h2>Our Story</h2>
+                        <p>Founded in 2024, TreeTails emerged from a simple observation: many community members cared about both environmental issues and animal welfare, but there was no unified platform to coordinate these efforts.</p>
+                        <p>We started as a small volunteer group and have grown into Olongapo's leading platform for green initiatives and animal rescue coordination.</p>
+                    </div>
+                    
+                    <div class="about-content" id="mission-content">
+                        <h2>Our Mission</h2>
+                        <p>To create a sustainable and compassionate community by connecting environmental conservation with animal welfare through collaborative action.</p>
+                        
+                        <div class="divider"></div>
+                        
+                        <h2>Our Vision</h2>
+                        <p>We envision Olongapo City as a model community where environmental stewardship and animal welfare are integrated into daily life, creating a healthier ecosystem for all living beings.</p>
+                    </div>
+                    
+                    <div class="about-content" id="features-content">
+                        <h2>Platform Features</h2>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-tree"></i>
+                                </div>
+                                <h3>Tree Planting</h3>
+                                <p>Coordinate and join tree planting events across the city</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-paw"></i>
+                                </div>
+                                <h3>Animal Rescue</h3>
+                                <p>Report and respond to animal rescue situations</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <h3>Adoption Services</h3>
+                                <p>Find forever homes for rescued animals</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3>Community Hub</h3>
+                                <p>Connect with like-minded volunteers and organizations</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-content" id="impact-content">
+                        <h2>Our Impact</h2>
+                        <p>Since our founding in 2023, TreeTails has made significant contributions to our community:</p>
+                        
+                        <div class="stats-mini" style="margin-top: 20px;">
+                            <div class="stat-mini">
+                                <div class="stat-mini-value">1,250+</div>
+                                <div class="stat-mini-label">Trees Planted</div>
+                            </div>
+                            <div class="stat-mini">
+                                <div class="stat-mini-value">320+</div>
+                                <div class="stat-mini-label">Animals Rescued</div>
+                            </div>
+                            <div class="stat-mini">
+                                <div class="stat-mini-value">156</div>
+                                <div class="stat-mini-label">Successful Adoptions</div>
+                            </div>
+                        </div>
+                        
+                        <div class="divider"></div>
+                        
+                        <h2>Community Recognition</h2>
+                        <p>TreeTails has been recognized by the Olongapo City Government for our contributions to environmental conservation and animal welfare. We work closely with local authorities to ensure our initiatives align with city development goals.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="margin-bottom: 20px; color: var(--primary);">Welcome to TreeTails!</h2>
+                <p style="margin-bottom: 15px; color: var(--gray);">
+                    TreeTails is a community-driven platform that connects environmental conservation with animal welfare in Olongapo City. 
+                    We bring together volunteers, organizations, and residents to create a cleaner, greener, and more compassionate city.
+                </p>
+                <p style="color: var(--gray);">
+                    Use the navigation above to explore different sections of our platform, manage your account, or get involved with our community initiatives.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Bot (moved lower for reliable fixed positioning) -->
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal">
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to logout from TreeTails?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="confirmLogout">Yes, Logout</button>
+                <button class="btn btn-secondary" id="cancelLogout">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Photo Analysis Modal -->
+    <div class="modal-overlay" id="aiModal" style="display:none;">
+        <div class="modal" id="aiModalContent">
+            <h2>Analyze Animal Photo</h2>
+            <p>Select a clear photo of the animal. The model will try to classify what it is (e.g., dog, cat, bird).</p>
+            <input type="file" id="aiImageInput" accept="image/*">
+            <div id="aiPreview" style="margin-top:12px; text-align:center;"></div>
+            <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+                <button class="btn btn-secondary" id="aiCancel">Cancel</button>
+                <button class="btn btn-primary" id="aiAnalyze" disabled>Analyze</button>
+            </div>
+            <div id="aiResults" style="margin-top:16px;"></div>
+        </div>
+    </div>
+
+    <!-- Chat Bot (placed after modals to avoid transformed ancestors affecting fixed positioning) -->
+    <div class="chat-bot-container">
+        <button class="chat-bot-button" id="chatBotButton" aria-label="Open chat">
+            <i class="fas fa-comments" aria-hidden="true"></i>
+        </button>
+        <div class="chat-bot-window" id="chatBotWindow">
+            <div class="chat-bot-header">
+                <div class="chat-bot-title">
+                    <i class="fas fa-robot"></i>
+                    TreeTails Assistant
+                </div>
+                <button class="chat-bot-close" id="chatBotClose" aria-label="Close chat">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="chat-bot-messages" id="chatBotMessages">
+                <div class="message bot-message">
+                    Hello! I'm your TreeTails assistant. I can help you with information about our platform, volunteering, tree planting, animal rescue, and more. How can I assist you today?
+                    <div class="quick-questions">
+                        <button class="quick-question" data-question="What is TreeTails?">What is TreeTails?</button>
+                        <button class="quick-question" data-question="How can I volunteer?">How can I volunteer?</button>
+                        <button class="quick-question" data-question="Where are the tree planting sites?">Tree planting sites</button>
+                        <button class="quick-question" data-question="How do I report an animal in need?">Report an animal</button>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-bot-input">
+                <input type="text" id="chatBotInput" placeholder="Type your question here..." aria-label="Chat input">
+                <button id="chatCameraBtn" class="chat-camera-btn" title="Send photo" aria-label="Send photo">
+                    <i class="fas fa-camera" aria-hidden="true"></i>
+                </button>
+                <button id="chatBotSend" aria-label="Send message">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- Firebase (compat) and initializer -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <!-- TensorFlow.js + MobileNet (client-side image classification) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+
+    <script>
+        // Mobile menu functionality (only attach if button exists)
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileMenuBtn && navLinks) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                // toggle icon between menu and close
+                if (navLinks.classList.contains('active')) {
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
+                    mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                } else {
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars" aria-hidden="true"></i>';
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // Highlight current page in navigation
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+
+        // About tabs functionality
+        const aboutTabs = document.querySelectorAll('.about-tab');
+        const aboutContents = document.querySelectorAll('.about-content');
+
+        aboutTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+                
+                // Remove active class from all tabs and contents
+                aboutTabs.forEach(t => t.classList.remove('active'));
+                aboutContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                this.classList.add('active');
+                document.getElementById(`${targetTab}-content`).classList.add('active');
+            });
+        });
+
+        // Chat Bot Functionality
+        const chatBotButton = document.getElementById('chatBotButton');
+        const chatBotWindow = document.getElementById('chatBotWindow');
+        const chatBotClose = document.getElementById('chatBotClose');
+        const chatBotMessages = document.getElementById('chatBotMessages');
+        const chatBotInput = document.getElementById('chatBotInput');
+        const chatBotSend = document.getElementById('chatBotSend');
+
+        // Toggle chat window using class for smooth transitions
+        chatBotButton.addEventListener('click', function() {
+            chatBotWindow.classList.add('open');
+        });
+
+        chatBotClose.addEventListener('click', function() {
+            chatBotWindow.classList.remove('open');
+        });
+
+        // Send message function
+        function sendMessage() {
+            const message = chatBotInput.value.trim();
+            if (message) {
+                // Add user message
+                addMessage(message, 'user');
+                
+                // Clear input
+                chatBotInput.value = '';
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Generate bot response
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    const response = generateResponse(message);
+                    addMessage(response, 'bot');
+                }, 1000 + Math.random() * 1000); // Random delay for more natural feel
+            }
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+            messageDiv.textContent = text;
+            
+            // Add quick questions for bot messages
+            if (sender === 'bot') {
+                const quickQuestionsDiv = document.createElement('div');
+                quickQuestionsDiv.classList.add('quick-questions');
+                
+                // Add relevant quick questions based on the message
+                const quickQuestions = getQuickQuestions(text);
+                quickQuestionsDiv.innerHTML = quickQuestions;
+                
+                messageDiv.appendChild(quickQuestionsDiv);
+                
+                // Add event listeners to new quick questions
+                setTimeout(() => {
+                    messageDiv.querySelectorAll('.quick-question').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const question = this.getAttribute('data-question');
+                            addMessage(question, 'user');
+                            
+                            showTypingIndicator();
+                            
+                            setTimeout(() => {
+                                removeTypingIndicator();
+                                const response = generateResponse(question);
+                                addMessage(response, 'bot');
+                            }, 1000 + Math.random() * 1000);
+                        });
+                    });
+                }, 100);
+            }
+            
+            chatBotMessages.appendChild(messageDiv);
+            chatBotMessages.scrollTop = chatBotMessages.scrollHeight;
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('typing-indicator');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatBotMessages.appendChild(typingDiv);
+            chatBotMessages.scrollTop = chatBotMessages.scrollHeight;
+        }
+
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // Get quick questions based on context
+        function getQuickQuestions(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('treetails') || lowerMessage.includes('what is') || lowerMessage.includes('about')) {
+                return `
+                    <button class="quick-question" data-question="How can I volunteer?">How can I volunteer?</button>
+                    <button class="quick-question" data-question="Where are the tree planting sites?">Tree planting sites</button>
+                    <button class="quick-question" data-question="How do I report an animal in need?">Report an animal</button>
+                `;
+            } else if (lowerMessage.includes('volunteer') || lowerMessage.includes('help') || lowerMessage.includes('participate')) {
+                return `
+                    <button class="quick-question" data-question="What events are coming up?">Upcoming events</button>
+                    <button class="quick-question" data-question="How do I register as a volunteer?">Register as volunteer</button>
+                    <button class="quick-question" data-question="What should I bring to tree planting?">What to bring</button>
+                `;
+            } else if (lowerMessage.includes('tree') || lowerMessage.includes('plant') || lowerMessage.includes('environment')) {
+                return `
+                    <button class="quick-question" data-question="What tools do I need for tree planting?">Required tools</button>
+                    <button class="quick-question" data-question="How often are tree planting events?">Event frequency</button>
+                    <button class="quick-question" data-question="What types of trees do you plant?">Tree species</button>
+                `;
+            } else if (lowerMessage.includes('animal') || lowerMessage.includes('rescue') || lowerMessage.includes('pet')) {
+                return `
+                    <button class="quick-question" data-question="What should I do if I find an injured animal?">Injured animal</button>
+                    <button class="quick-question" data-question="How can I adopt an animal?">Adoption process</button>
+                    <button class="quick-question" data-question="Do you have veterinary services?">Veterinary care</button>
+                `;
+            } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                return `
+                    <button class="quick-question" data-question="What is TreeTails?">What is TreeTails?</button>
+                    <button class="quick-question" data-question="How can I volunteer?">How can I volunteer?</button>
+                    <button class="quick-question" data-question="Tell me about upcoming events">Upcoming events</button>
+                `;
+            } else {
+                return `
+                    <button class="quick-question" data-question="What is TreeTails?">What is TreeTails?</button>
+                    <button class="quick-question" data-question="How can I volunteer?">How can I volunteer?</button>
+                    <button class="quick-question" data-question="Where are the tree planting sites?">Tree planting sites</button>
+                `;
+            }
+        }
+
+        // Generate bot response
+        function generateResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Greetings and casual conversation
+            if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                const greetings = [
+                    "Hello! How can I help you with TreeTails today?",
+                    "Hi there! What would you like to know about TreeTails?",
+                    "Hey! I'm here to help with anything about TreeTails. What's on your mind?"
+                ];
+                return greetings[Math.floor(Math.random() * greetings.length)];
+            }
+            
+            if (lowerMessage.includes('how are you') || lowerMessage.includes("how's it going")) {
+                return "I'm doing great, thanks for asking! Ready to help you with anything TreeTails-related.";
+            }
+            
+            if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+                return "You're welcome! Is there anything else I can help you with?";
+            }
+            
+            if (lowerMessage.includes('bye') || lowerMessage.includes('goodbye') || lowerMessage.includes('see you')) {
+                return "Goodbye! Thanks for chatting with me. Remember, you can always reach out if you have more questions about TreeTails!";
+            }
+            
+            // TreeTails information
+            if (lowerMessage.includes('what is treetails') || lowerMessage.includes('tell me about treetails')) {
+                return "TreeTails is a community-driven platform that connects environmental conservation with animal welfare in Olongapo City. We coordinate tree planting initiatives and animal rescue operations to create a cleaner, greener, and more compassionate community.";
+            }
+            
+            if (lowerMessage.includes('mission') || lowerMessage.includes('purpose')) {
+                return "Our mission is to create a sustainable and compassionate community by connecting environmental conservation with animal welfare through collaborative action.";
+            }
+            
+            if (lowerMessage.includes('vision') || lowerMessage.includes('goal')) {
+                return "We envision Olongapo City as a model community where environmental stewardship and animal welfare are integrated into daily life, creating a healthier ecosystem for all living beings.";
+            }
+            
+            // Volunteering
+            if (lowerMessage.includes('volunteer') || lowerMessage.includes('help') || lowerMessage.includes('participate')) {
+                return "You can volunteer by registering on our platform and checking the Bulletin section for upcoming events. We have tree planting activities every weekend and animal rescue operations as needed. You can also join our workshops to learn proper techniques.";
+            }
+            
+            if (lowerMessage.includes('register') || lowerMessage.includes('sign up')) {
+                return "To register as a volunteer, click on your profile and complete the volunteer registration form. You'll need to provide basic information and indicate your areas of interest (tree planting, animal rescue, or both).";
+            }
+            
+            if (lowerMessage.includes('event') || lowerMessage.includes('upcoming')) {
+                return "We have several upcoming events: Tree Planting at Rizal Triangle Park this Saturday, and a Rescue Workshop at the Community Center next Wednesday. Check the Bulletin section for details and to RSVP.";
+            }
+            
+            // Tree planting
+            if (lowerMessage.includes('tree planting') || lowerMessage.includes('planting sites')) {
+                return "We have 120 tree planting sites across Olongapo City. The main sites are at Rizal Park, New Cabalan, and Gordon Heights. You can check the Map section to see all locations and upcoming planting schedules.";
+            }
+            
+            if (lowerMessage.includes('tools') || lowerMessage.includes('equipment') || lowerMessage.includes('what to bring')) {
+                return "For tree planting, we provide shovels, gloves, and seedlings. We recommend wearing comfortable clothes, closed-toe shoes, and bringing water. For animal rescue, we have specialized equipment that our trained volunteers use.";
+            }
+            
+            if (lowerMessage.includes('tree species') || lowerMessage.includes('types of trees')) {
+                return "We primarily plant native species like Narra, Mahogany, and Acacia that are well-suited to our local climate and provide good habitat for wildlife. We also plant fruit trees in community areas.";
+            }
+            
+            // Animal rescue
+            if (lowerMessage.includes('animal') && lowerMessage.includes('report')) {
+                return "To report an animal in need, go to the Bulletin section and use the 'Report Animal' feature. Please provide the location, condition of the animal, and any photos if possible. Our rescue team will respond as quickly as possible.";
+            }
+            
+            if (lowerMessage.includes('injured animal') || lowerMessage.includes('hurt')) {
+                return "If you find an injured animal, keep your distance and don't attempt to handle it unless you're trained. Note the location and condition, then report it immediately through our Bulletin section. Our rescue team will respond promptly.";
+            }
+            
+            if (lowerMessage.includes('veterinary') || lowerMessage.includes('vet') || lowerMessage.includes('medical')) {
+                return "We partner with local veterinary clinics that provide care for rescued animals. All animals in our care receive necessary medical attention before being made available for adoption.";
+            }
+            
+            // Adoption
+            if (lowerMessage.includes('adopt') || lowerMessage.includes('adoption')) {
+                return "You can browse available animals for adoption in the Adoption section. Each animal has a profile with information about their history and needs. The adoption process includes a screening to ensure the animal goes to a suitable home.";
+            }
+            
+            // Impact and statistics
+            if (lowerMessage.includes('impact') || lowerMessage.includes('achievement') || lowerMessage.includes('statistics')) {
+                return "Since 2023, TreeTails has planted over 1,250 trees, rescued 320+ animals, and facilitated 156 successful adoptions. We've engaged 3,200+ volunteers in our community initiatives.";
+            }
+            
+            // Default response for unrecognized queries
+            const defaultResponses = [
+                "I'm not sure I understand. Could you rephrase your question?",
+                "I'm still learning! Could you try asking that in a different way?",
+                "I don't have an answer for that yet. Try asking about TreeTails, volunteering, tree planting, or animal rescue.",
+                "That's an interesting question! I'm better equipped to answer questions about TreeTails and our community initiatives."
+            ];
+            
+            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+        }
+
+        // Event listeners for chat
+        chatBotSend.addEventListener('click', sendMessage);
+        chatBotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Event listeners for initial quick questions
+        document.querySelectorAll('.quick-question').forEach(button => {
+            button.addEventListener('click', function() {
+                const question = this.getAttribute('data-question');
+                addMessage(question, 'user');
+                
+                showTypingIndicator();
+                
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    const response = generateResponse(question);
+                    addMessage(response, 'bot');
+                }, 1000 + Math.random() * 1000);
+            });
+        });
+
+        // Logout functionality: the navbar logout link is a normal link to `login.html`.
+        // Keep modal handlers available (in case other flows open the modal),
+        // but do not intercept the navbar link so navigation happens immediately.
+        const logoutLink = document.getElementById('logoutLink');
+        const logoutModal = document.getElementById('logoutModal');
+        const confirmLogout = document.getElementById('confirmLogout');
+        const cancelLogout = document.getElementById('cancelLogout');
+
+        if (confirmLogout) {
+            confirmLogout.addEventListener('click', function() {
+                // Confirm button goes to the login page
+                window.location.href = 'login.html';
+            });
+        }
+
+        if (cancelLogout && logoutModal) {
+            cancelLogout.addEventListener('click', function() {
+                logoutModal.style.display = 'none';
+            });
+        }
+
+        if (logoutModal) {
+            logoutModal.addEventListener('click', function(e) {
+                if (e.target === logoutModal) {
+                    logoutModal.style.display = 'none';
+                }
+            });
+        }
+
+        // --- AI Photo Analysis (MobileNet) ---
+        let mobilenetModel = null;
+        let chatInitiatedImageUpload = false;
+        const openAiModalBtn = document.getElementById('openAiModalBtn');
+        const aiModal = document.getElementById('aiModal');
+        const aiCancel = document.getElementById('aiCancel');
+        const aiAnalyze = document.getElementById('aiAnalyze');
+        const aiImageInput = document.getElementById('aiImageInput');
+        const aiPreview = document.getElementById('aiPreview');
+        const aiResults = document.getElementById('aiResults');
+
+        async function ensureModel() {
+            if (mobilenetModel) return mobilenetModel;
+            aiResults.innerHTML = '<em>Loading model...</em>';
+            try {
+                mobilenetModel = await mobilenet.load();
+                aiResults.innerHTML = '<em>Model ready.</em>';
+                return mobilenetModel;
+            } catch (err) {
+                aiResults.innerHTML = '<span style="color:red;">Failed to load model.</span>';
+                console.error('mobilenet load error', err);
+                throw err;
+            }
+        }
+
+        openAiModalBtn.addEventListener('click', async () => {
+            aiModal.style.display = 'flex';
+            aiResults.innerHTML = '';
+            aiPreview.innerHTML = '';
+            aiImageInput.value = '';
+            aiAnalyze.disabled = true;
+            // start loading model in background
+            ensureModel().catch(()=>{});
+        });
+
+        // Chat camera button opens the same modal but flags chat flow
+        const chatCameraBtn = document.getElementById('chatCameraBtn');
+        if (chatCameraBtn) {
+            chatCameraBtn.addEventListener('click', () => {
+                chatInitiatedImageUpload = true;
+                aiModal.style.display = 'flex';
+                aiResults.innerHTML = '';
+                aiPreview.innerHTML = '';
+                aiImageInput.value = '';
+                aiAnalyze.disabled = true;
+                ensureModel().catch(()=>{});
+            });
+        }
+
+        aiCancel.addEventListener('click', () => {
+            aiModal.style.display = 'none';
+        });
+
+        aiImageInput.addEventListener('change', () => {
+            const file = aiImageInput.files && aiImageInput.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            aiPreview.innerHTML = `<img id="aiPreviewImg" src="${url}" style="max-width:100%;height:auto;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.08);">`;
+            aiResults.innerHTML = '';
+            aiAnalyze.disabled = false;
+        });
+
+        aiAnalyze.addEventListener('click', async () => {
+            const img = document.getElementById('aiPreviewImg');
+            if (!img) return;
+            aiAnalyze.disabled = true;
+            aiResults.innerHTML = '<em>Analyzing image, please wait...</em>';
+            // if initiated from chat, show typing in chat while analyzing
+            if (chatInitiatedImageUpload) {
+                showTypingIndicator();
+            }
+            try {
+                const model = await ensureModel();
+                // classify returns array of {className, probability}
+                const predictions = await model.classify(img, 5);
+                if (!predictions || predictions.length === 0) {
+                    aiResults.innerHTML = '<div>No predictions returned.</div>';
+                    if (chatInitiatedImageUpload) {
+                        removeTypingIndicator();
+                        addMessage("I couldn't analyze that image.", 'bot');
+                    }
+                } else {
+                    const list = predictions.map(p => `<li>${escapeHtml(p.className)} — ${(p.probability*100).toFixed(1)}%</li>`).join('');
+                    aiResults.innerHTML = `<div><strong>Top predictions:</strong></div><ul style="margin-top:8px">${list}</ul>`;
+
+                    if (chatInitiatedImageUpload) {
+                        // remove typing and append a rich bot message with thumbnail + list
+                        removeTypingIndicator();
+                        const thumbSrc = img.src;
+                        const html = `
+                            <div style="display:flex;gap:12px;align-items:flex-start">
+                                <img src="${thumbSrc}" style="width:84px;height:84px;border-radius:8px;object-fit:cover;border:1px solid #eee;"/>
+                                <div>
+                                    <div style="font-weight:700;margin-bottom:6px">Image analysis</div>
+                                    <div style="font-size:13px;color:#333"><ul style="margin:0;padding-left:18px">${predictions.map(p=>`<li>${escapeHtml(p.className)} — ${(p.probability*100).toFixed(1)}%</li>`).join('')}</ul></div>
+                                </div>
+                            </div>
+                        `;
+                        addRichMessage(html, 'bot');
+                        // reset flag
+                        chatInitiatedImageUpload = false;
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                aiResults.innerHTML = '<div style="color:red;">Error analyzing image.</div>';
+                if (chatInitiatedImageUpload) {
+                    removeTypingIndicator();
+                    addMessage('Error analyzing image.', 'bot');
+                    chatInitiatedImageUpload = false;
+                }
+            } finally {
+                aiAnalyze.disabled = false;
+            }
+        });
+
+        function escapeHtml(s){
+            return (s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        // Add a function to append HTML messages (used for image thumbnails)
+        function addRichMessage(html, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+            messageDiv.innerHTML = html;
+            chatBotMessages.appendChild(messageDiv);
+            chatBotMessages.scrollTop = chatBotMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>
