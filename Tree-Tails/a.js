@@ -30,14 +30,21 @@ class AdoptionApp {
         this.init();
     }
 
-    async init() {
-        this.setupEventListeners();
-        await this.loadAnimals();
-        this.loadMyApplications();
-        this.loadMyListings();
-        this.setupAuthListener();
-        this.showNotification('Adoption platform loaded successfully! 🐾', 'success');
+   async init() {
+    // 1. Check LocalStorage first (Instant Fix)
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+        currentUser = JSON.parse(storedUser);
+        console.log("Restored user from storage:", currentUser);
+        this.updateAuthUI(true); // Force UI to show "Logged In" state
     }
+
+    this.setupEventListeners();
+    await this.loadAnimals();
+    this.loadMyApplications();
+    this.loadMyListings();
+    this.setupAuthListener(); // Firebase will double-check this later
+}
 
     setupEventListeners() {
         // Tab switching
