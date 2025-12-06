@@ -235,7 +235,7 @@ class AdoptionApp {
             if (db) {
                 const snapshot = await db.collection('animals')
                     .where('status', '==', 'available')
-                    .orderBy('createdAt', 'desc')
+                   // .orderBy('createdAt', 'desc')
                     .get();
 
                 animalsData = [];
@@ -267,21 +267,6 @@ class AdoptionApp {
         return [
             {
                 id: '1',
-                name: 'Buddy',
-                type: 'dog',
-                breed: 'Aspin',
-                age: '2 years',
-                gender: 'male',
-                location: 'Barreto',
-                description: 'Friendly and energetic Aspin found near Barretto Beach.',
-                status: 'available',
-                postedBy: 'Maria Santos',
-                postedByEmail: 'maria@example.com',
-                postedByPhone: '0917-123-4567',
-                createdAt: new Date('2024-01-15')
-            },
-            {
-                id: '2',
                 name: 'Mingming',
                 type: 'cat',
                 breed: 'Domestic Shorthair',
