@@ -1,0 +1,64 @@
+/* layout.css - Dedicated file for structural/layout styles */
+ :root {
+            /* Brighter, playful palette */
+            --primary: #0f7a5f;
+            --primary-light: #16a085;
+            --primary-dark: #0b5b44;
+            --secondary: #ffd166;
+            --accent: #ff7a59;
+            --animal: #ffb04c;
+            --light: #f7fbf8;
+            --dark: #21303a;
+            --gray: #6b7b7f;
+            --light-gray: #eef3f1;
+            --white: #ffffff;
+            --shadow: 0 8px 24px rgba(16, 24, 32, 0.08);
+            --shadow-hover: 0 16px 48px rgba(16, 24, 32, 0.12);
+            --radius: 14px;
+            --transition: all 0.28s cubic-bezier(.2,.9,.3,1);
+            --nav-height: 80px;
+        }
+/* 1. Set the body to handle the layout */
+body {
+    display: block; /* Ensure standard block flow */
+    background-color: var(--light);
+}
+
+/* 2. Pin the sidebar to the left */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px; /* Fixed width for the sidebar */
+    height: 100vh; /* Full height */
+    background: var(--white);
+    z-index: 1000; /* Ensure it stays on top */
+    overflow-y: auto; /* Allow scrolling inside sidebar if needed */
+    border-right: 1px solid var(--light-gray);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    background-color: var(--primary);
+}
+
+/* 3. Push the main content to the right so it doesn't hide behind sidebar */
+main, #mainContent {
+    margin-left: 260px; /* EXACTLY match the nav width */
+    width: calc(100% - 260px); /* Take up the rest of the space */
+    padding: 30px;
+    min-height: 100vh;
+}
+
+/* Optional: Fix for mobile devices */
+@media (max-width: 768px) {
+    nav {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--light-gray);
+    }
+    main, #mainContent {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+    }
+}

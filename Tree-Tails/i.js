@@ -207,7 +207,90 @@ function loadPage(page) {
             });
         });
         
-    } else if (page === 'logout.html') {
+    }  else if (page === 'education.html') {
+        mainContent.innerHTML = `
+            <div class="education-page">
+                <div class="header">
+                    <div class="logo">
+                        <div class="logo-icon">🎓</div>
+                        <div class="logo-text">Education Hub</div>
+                    </div>
+                    <p class="tagline">Share and discover learning materials about nature and wildlife</p>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">Post Learning Material</h3>
+                    <div class="form-group">
+                        <label for="postTitle">Title</label>
+                        <input type="text" id="postTitle" class="form-control" placeholder="E.g., How to plant Narra trees properly">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="postCategory">Category</label>
+                            <select id="postCategory" class="form-control">
+                                <option value="planting">Tree Planting Guide</option>
+                                <option value="rescue">Animal Rescue Tip</option>
+                                <option value="environment">Environmental Science</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="postType">Material Type</label>
+                            <select id="postType" class="form-control">
+                                <option value="article">Article/Guide</option>
+                                <option value="video">Video Link</option>
+                                <option value="document">PDF Document</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="postContent">Description or Link</label>
+                        <textarea id="postContent" class="form-control" rows="3" placeholder="Share the details or paste a link here..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="alert('Post submitted for review!')">
+                        <i class="fas fa-paper-plane"></i> Share Material
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="account-tabs">
+                        <button class="account-tab active">All Materials</button>
+                        <button class="account-tab">Guides</button>
+                        <button class="account-tab">Videos</button>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <div class="event-item" style="border-left-color: var(--primary);">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <h4 style="color: var(--primary); font-size: 1.1rem;">Native Trees of the Philippines 101</h4>
+                                <span class="badge" style="font-size: 0.8rem;">Guide</span>
+                            </div>
+                            <p style="margin-bottom: 10px;">A comprehensive guide on identifying and caring for native tree species in Luzon.</p>
+                            <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem; color: var(--gray);">
+                                <span><i class="fas fa-user"></i> Posted by Maria S.</span>
+                                <span><i class="fas fa-clock"></i> 2 hours ago</span>
+                            </div>
+                        </div>
+
+                        <div class="event-item" style="border-left-color: var(--animal);">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <h4 style="color: var(--animal); font-size: 1.1rem;">First Aid for Injured Stray Cats</h4>
+                                <span class="badge animal" style="font-size: 0.8rem;">Video</span>
+                            </div>
+                            <p style="margin-bottom: 10px;">Watch this tutorial on how to safely approach and provide basic first aid to injured cats.</p>
+                            <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem; color: var(--gray);">
+                                <span><i class="fas fa-user"></i> Posted by Dr. Santos</span>
+                                <span><i class="fas fa-clock"></i> 1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } 
+    
+    
+    
+    else if (page === 'logout.html') {
         mainContent.innerHTML = `
             <div class="logout-page">
                 <div class="logout-icon">
@@ -537,6 +620,8 @@ setTimeout(() => {
     }
 }, 5000);
 
+
+
 // Small enhancement: focus search on "/search" hash or url param
 (function(){
     const q = new URLSearchParams(location.search).get('q');
@@ -549,4 +634,42 @@ setTimeout(() => {
     }
 })();
 
-<script src="i.js"></script>
+// --- Logout Modal Logic ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutModal = document.getElementById('logoutModal');
+    const cancelLogout = document.getElementById('cancelLogout');
+    const confirmLogout = document.getElementById('confirmLogout');
+
+    // 1. Open Modal
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Stop immediate navigation
+            logoutModal.classList.add('show');
+        });
+    }
+
+    // 2. Close Modal (Cancel)
+    if (cancelLogout) {
+        cancelLogout.addEventListener('click', () => {
+            logoutModal.classList.remove('show');
+        });
+    }
+
+    // 3. Close Modal (Clicking outside the white box)
+    window.addEventListener('click', (e) => {
+        if (e.target === logoutModal) {
+            logoutModal.classList.remove('show');
+        }
+    });
+
+    // 4. Confirm Logout (Perform the actual action)
+    if (confirmLogout) {
+        confirmLogout.addEventListener('click', () => {
+            // Redirect to login page or handle logout logic here
+            window.location.href = 'login.html'; 
+        });
+    }
+});
+

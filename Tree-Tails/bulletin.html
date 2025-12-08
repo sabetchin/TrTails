@@ -6,6 +6,7 @@
     <title>TreeTails Olongapo - Community & Volunteer Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="b.css">    
     <style>
         * {
             margin: 0;
@@ -54,14 +55,13 @@
         }
 
         /* Navigation */
-        nav {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+       nav {
+            background-color: var(--primary);
             padding: 0 20px;
-            box-shadow: var(--shadow-large);
+            box-shadow: var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
+            z-index: 100;
         }
 
         .nav-container {
@@ -70,81 +70,60 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 80px;
+            height: var(--nav-height);
         }
 
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             color: var(--white);
             text-decoration: none;
-            font-size: 1.6rem;
-            font-weight: 800;
-            transition: var(--transition);
-        }
-
-        .nav-brand:hover {
-            transform: translateY(-2px);
-        }
-
-        .nav-brand i {
-            font-size: 1.8rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
         .nav-links {
             display: flex;
-            gap: 8px;
+            gap: 30px;
             list-style: none;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            padding: 8px;
-            backdrop-filter: blur(10px);
         }
 
         .nav-links li a {
             color: var(--white);
             text-decoration: none;
-            font-weight: 600;
-            padding: 12px 24px;
-            border-radius: 50px;
+            font-weight: 500;
+            padding: 8px 0;
+            border-bottom: 3px solid transparent;
             transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 8px;
+            height: 70px;
+            line-height: 70px;
             position: relative;
-            overflow: hidden;
         }
 
-        .nav-links li a::before {
+        .nav-links li a:hover, .nav-links li a.active {
+            border-bottom-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .nav-links li a::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--secondary);
             transition: var(--transition);
         }
 
-        .nav-links li a:hover::before {
-            left: 100%;
+        .nav-links li a:hover::after, .nav-links li a.active::after {
+            width: 100%;
         }
 
-        .nav-links li a:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .nav-links li a.active {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .nav-links li a i {
-            font-size: 1.1rem;
-        }
 
         /* Enhanced Header */
         .header {
@@ -224,7 +203,7 @@
         /* Enhanced Tabs */
         .nav-tabs {
             display: flex;
-            background: rgba(255, 255, 255, 0.1);
+            background-color: var(--primary);;
             border-radius: 50px;
             padding: 8px;
             margin-bottom: 30px;
@@ -1251,6 +1230,7 @@
             </a>
             <ul class="nav-links">
                 <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="education.html" class="active"><i class="fas fa-graduation-cap"></i> Education Hub</a></li>
                 <li><a href="bulletin.html" class="active"><i class="fas fa-bell"></i> Bulletin</a></li>
                 <li><a href="adoption.html"><i class="fas fa-heart"></i> Adoption</a></li>
                 <li><a href="map.html"><i class="fas fa-map"></i> Map</a></li>
@@ -1431,6 +1411,32 @@
         <img id="previewImage" src="" style="max-width: 90%; max-height: 90vh; border-radius: 8px; box-shadow: 0 0 50px rgba(0,0,0,0.5);">
     </div>
 
+    <section id="volunteer" class="volunteer-section">
+    <div class="volunteer-content">
+        <h2>Join Our Volunteer Team</h2>
+        <p>Help us make a difference! Sign up below to get involved in our upcoming events.</p>
+        
+        <form id="volunteerForm">
+            <div class="form-group">
+                <input type="text" id="volName" placeholder="Full Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="volEmail" placeholder="Email Address" required>
+            </div>
+            <div class="form-group">
+                <select id="volRole">
+                    <option value="Event Support">Event Support</option>
+                    <option value="Logistics">Logistics</option>
+                    <option value="Outreach">Community Outreach</option>
+                </select>
+            </div>
+            <button type="submit" id="volunteerBtn">Sign Up Now</button>
+        </form>
+
+        <p id="volunteerMessage" style="display:none; color: green; font-weight: bold; margin-top: 10px;"></p>
+    </div>
+</section>
+
     <script>
         // Community Platform Logic
         class CommunityPlatform {
@@ -1460,6 +1466,13 @@
                         this.style.height = 'auto';
                         this.style.height = (this.scrollHeight) + 'px';
                     });
+                    document.getElementById('cancelJoin')?.addEventListener('click', () => {
+        document.getElementById('joinModal').style.display = 'none';
+    });
+
+    document.getElementById('confirmJoin')?.addEventListener('click', () => {
+        this.handleJoinConfirmation();
+    });
                 }
 
                 // Modal close buttons
@@ -1626,9 +1639,9 @@
                             <button class="post-action like ${post.liked ? 'liked' : ''}" onclick="window.communityPlatform.toggleLike(${post.id})">
                                 <i class="${post.liked ? 'fas' : 'far'} fa-heart"></i> Like
                             </button>
-                            <button class="post-action comment">
-                                <i class="far fa-comment"></i> Comment
-                            </button>
+                            <button class="post-action comment" onclick="window.communityPlatform.viewComments(${post.id})">
+    <i class="far fa-comment"></i> ${post.comments ? post.comments.length : 0}
+</button>
                             <button class="post-action share">
                                 <i class="far fa-share-square"></i> Share
                             </button>
@@ -1683,10 +1696,50 @@
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${percent}%"></div>
                         </div>
-                        <button class="btn btn-primary" style="margin-top:20px; width:100%;">Sign Up Now</button>
+                        <button class="btn btn-primary" style="margin-top:20px; width:100%;" onclick="window.communityPlatform.openJoinModal(${opp.id})">Sign Up Now</button>
                     </div>
                 `}).join('');
             }
+
+            viewComments(postId) {
+        const post = this.posts.find(p => p.id === postId);
+        if (post && post.comments && post.comments.length > 0) {
+            // Simple alert to show the first comment for now
+            alert(`Comment from ${post.comments[0].author}: "${post.comments[0].text}"`);
+        } else {
+            alert("No comments on this post yet.");
+        }
+    }
+
+    // 2. Open the Join Modal
+    openJoinModal(oppId) {
+        this.selectedOpportunityId = oppId; 
+        const modal = document.getElementById('joinModal');
+        const opp = this.opportunities.find(o => o.id === oppId);
+        
+        if (modal) {
+            const textElement = document.getElementById('joinModalText');
+            if(textElement && opp) {
+                textElement.innerText = `You are about to join: ${opp.title}`;
+            }
+            modal.style.display = 'flex';
+        }
+    }
+
+    // 3. Confirm Joining
+    handleJoinConfirmation() {
+        const modal = document.getElementById('joinModal');
+        if(modal) modal.style.display = 'none';
+        
+        this.showNotification('Successfully signed up! Check "My Activities" tab.', 'success');
+        
+        // Update the volunteer count visually
+        const opp = this.opportunities.find(o => o.id === this.selectedOpportunityId);
+        if(opp) {
+            opp.volunteersJoined += 1;
+            this.renderOpportunities(); 
+        }
+    }
 
             toggleLike(id) {
                 const post = this.posts.find(p => p.id === id);
@@ -1765,6 +1818,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             window.communityPlatform = new CommunityPlatform();
         });
+        
     </script>
 </body>
 </html>

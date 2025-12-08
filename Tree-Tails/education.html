@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education Hub - TreeTails</title>
+
+    <!-- Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="i.css">
+    <link rel="stylesheet" href="layout.css">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <a class="nav-brand" href="index.html">
+                <i class="fas fa-leaf"></i> TreeTails
+            </a>
+
+            <div class="sidebar-profile">
+                <div class="profile-mini">
+                    <div class="profile-mini-avatar">
+                        <img src="https://t4.ftcdn.net/jpg/15/60/67/25/360_F_1560672576_AXWum7fhevX9VZGl2gbkRPo4vX2LXvCu.jpg" alt="User"> 
+                    </div>
+                    <div class="profile-mini-info">
+                        <h4>Test Lang</h4>
+                        <p>User</p>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="education.html" class="active"><i class="fas fa-graduation-cap"></i> Education Hub</a></li>
+                <li><a href="bulletin.html"><i class="fas fa-bell"></i> Bulletin</a></li>
+                <li><a href="adoption.html"><i class="fas fa-heart"></i> Adoption</a></li>
+                <li><a href="map.html"><i class="fas fa-map"></i> Map</a></li>
+                <li><a href="login.html" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="mainContent">
+        <div class="education-page">
+
+            <!-- Page Header -->
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon">🎓</div>
+                    <div class="logo-text">Education Hub</div>
+                </div>
+                <p class="tagline">Share knowledge and learn how to care for the environment</p>
+            </div>
+
+            <!-- Post Material Card -->
+            <div class="card">
+                <h3 style="margin-bottom: 20px; color: var(--primary);">Post Learning Material</h3>
+
+                <div class="form-group">
+                    <label for="eduTitle">Title</label>
+                    <input type="text" id="eduTitle" class="form-control" placeholder="E.g., How to Compost at Home">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="eduCategory">Category</label>
+                        <select id="eduCategory" class="form-control">
+                            <option value="planting">Tree Planting</option>
+                            <option value="rescue">Animal Rescue</option>
+                            <option value="sustainability">Sustainability</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="eduType">Type</label>
+                        <select id="eduType" class="form-control">
+                            <option value="article">Article/Guide</option>
+                            <option value="video">Video Link</option>
+                            <option value="infographic">Infographic</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="eduContent">Description or Link</label>
+                    <textarea id="eduContent" class="form-control" rows="3" placeholder="Paste your link or write a short description..."></textarea>
+                </div>
+
+                <button class="btn btn-primary" id="postMaterialBtn">
+                    <i class="fas fa-paper-plane"></i> Share Material
+                </button>
+            </div>
+
+            <!-- All Materials -->
+            <div class="card">
+                <div class="account-tabs">
+                    <button class="account-tab active">All Materials</button>
+                    <button class="account-tab">Guides</button>
+                    <button class="account-tab">Videos</button>
+                </div>
+
+                <div id="materialsList" style="margin-top: 25px;"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Logout Modal -->
+    <div id="logoutModal">
+        <div class="modal-content">
+            <h3>Log Out?</h3>
+            <p>Are you sure you want to sign out?</p>
+
+            <div class="modal-actions">
+                <button id="cancelLogout" class="btn-cancel">Cancel</button>
+                <button id="confirmLogout" class="btn-confirm">Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Load -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-init.js"></script>
+    <script src="i.js"></script>
+
+    <!-- Education Hub JS -->
+    <script src="education.js"></script>
+
+</body>
+</html>

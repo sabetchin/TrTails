@@ -1403,3 +1403,95 @@ TreeTails Olongapo Adoption Directory
 document.addEventListener('DOMContentLoaded', () => {
     window.adoptionApp = new AdoptionApp();
 });
+
+// --- AI Photo Analysis Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const openBtn = document.getElementById('openAiModalBtn');
+    const modal = document.getElementById('aiModal');
+    const closeBtn = document.getElementById('aiCancelBtn');
+    const closeBottom = document.getElementById('aiCloseBottom');
+    const dropZone = document.getElementById('aiDropZone');
+    const input = document.getElementById('aiImageInput');
+    const preview = document.getElementById('aiPreview');
+    const analyzeBtn = document.getElementById('aiAnalyze');
+    const results = document.getElementById('aiResults');
+
+    let model = null;
+
+    // 1. Open/Close Modal
+    if(openBtn) openBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+        resetAI();
+        loadModel(); // Pre-load model
+    });
+
+    const closeModal = () => modal.style.display = 'none';
+    if(closeBtn) closeBtn.addEventListener('click', closeModal);
+    if(closeBottom) closeBottom.addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+
+    // 2. Handle Image Upload
+    if(dropZone) dropZone.addEventListener('click', () => input.click());
+
+    if(input) input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            // Show preview
+            preview.innerHTML = `<img id="aiImgToScan" src="${e.target.result}" style="max-width:100%; max-height:200px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">`;
+            analyzeBtn.disabled = false;
+            results.innerHTML = '';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // 3. AI Analysis
+    async function loadModel() {
+        if (model) return model;
+        try {
+            // Ensure you have the script tags for tfjs and mobilenet in your HTML head
+            model = await mobilenet.load(); 
+        } catch (e) { console.error("Model load failed", e); }
+        return model;
+    }
+
+    if(analyzeBtn) analyzeBtn.addEventListener('click', async () => {
+        const img = document.getElementById('aiImgToScan');
+        if(!img) return;
+
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+        results.innerHTML = '';
+
+        try {
+            const loadedModel = await loadModel();
+            if (!loadedModel) throw new Error("Model not loaded");
+
+            const predictions = await loadedModel.classify(img);
+
+            // Render Results styled with your Brown theme
+            results.innerHTML = predictions.map(p => `
+                <div class="ai-result-item">
+                    <span>${p.className}</span>
+                    <span class="ai-result-score">${(p.probability * 100).toFixed(1)}%</span>
+                </div>
+            `).join('');
+            
+        } catch (err) {
+            results.innerHTML = `<div style="color:red; text-align:center;">Error: ${err.message}</div>`;
+        } finally {
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerHTML = '<i class="fas fa-search"></i> Analyze';
+        }
+    });
+
+    function resetAI() {
+        preview.innerHTML = '';
+        results.innerHTML = '';
+        analyzeBtn.disabled = true;
+        input.value = '';
+    }
+
+});
