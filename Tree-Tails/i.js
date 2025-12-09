@@ -312,23 +312,23 @@ function loadPage(page) {
         `;
         
         // Add logout functionality
-        document.getElementById('confirmLogout').addEventListener('click', function() {
-            alert('You have been logged out successfully. Redirecting to login page...');
-            // In a real app, this would redirect to login page
-            // window.location.href = 'login.html';
-        });
-        
-        document.getElementById('cancelLogout').addEventListener('click', function() {
-            // Go back to home page
-            loadPage('index.html');
-        });
-        
-    } else {
-        // Default to home page
-        // This would be the original home page content
-        // For simplicity, we're keeping the home page as default
     }
+
+    const confirmLogoutBtn = document.getElementById('confirmLogout');
+const cancelLogoutBtn = document.getElementById('cancelLogout');
+
+if (confirmLogoutBtn) {
+    confirmLogoutBtn.addEventListener('click', () => {
+        alert('You have been logged out successfully. Redirecting to login page...');
+    });
 }
+
+if (cancelLogoutBtn) {
+    cancelLogoutBtn.addEventListener('click', () => {
+        loadPage('index.html');
+    });
+}
+
 
 // Mobile menu functionality
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -673,3 +673,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+}

@@ -51,7 +51,7 @@
             <div class="header">
                 <div class="logo">
                     <div class="logo-icon">🎓</div>
-                    <div class="logo-text">Education Hub</div>
+                    <div class="logo-text" style="color: white;">Education Hub</div>
                 </div>
                 <p class="tagline">Share knowledge and learn how to care for the environment</p>
             </div>
@@ -130,8 +130,68 @@
     <script src="firebase-init.js"></script>
     <script src="i.js"></script>
 
+
+    <div id="deleteModal" class="modal-bg" style="display:none;">
+    <div class="modal-box">
+        <h3>Delete Post?</h3>
+        <p>Are you sure you want to delete this learning material?</p>
+
+        <div class="modal-buttons">
+            <button id="cancelDelete" class="btn-cancel">Cancel</button>
+            <button id="confirmDelete" class="btn-danger">Delete</button>
+        </div>
+    </div>
+</div>
     <!-- Education Hub JS -->
     <script src="education.js"></script>
+
+    
+
+<style>
+.modal-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.modal-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-cancel {
+    padding: 8px 16px;
+    background: #ddd;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-danger {
+    padding: 8px 16px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+</style>
 
 </body>
 </html>
