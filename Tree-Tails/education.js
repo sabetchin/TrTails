@@ -12,6 +12,24 @@ const postBtn = document.getElementById('postMaterialBtn');
 const materialsContainer = document.getElementById('materialsList');
 const tabButtons = document.querySelectorAll('.account-tab');
 
+// SUCCESS MODAL
+const successModal = document.getElementById("successModal");
+const closeSuccess = document.getElementById("closeSuccess");
+
+function showSuccessModal() {
+    successModal.style.display = "flex";
+
+    // Auto close after 2 seconds
+    setTimeout(() => {
+        successModal.style.display = "none";
+    }, 2000);
+}
+
+closeSuccess.addEventListener("click", () => {
+    successModal.style.display = "none";
+});
+
+
 // ===============================
 // DELETE MODAL ELEMENTS
 // ===============================
@@ -80,7 +98,8 @@ async function submitEducationMaterial() {
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
 
-        alert("Thank you! Your material has been submitted.");
+        showSuccessModal();
+
 
         titleInput.value = "";
         contentInput.value = "";
