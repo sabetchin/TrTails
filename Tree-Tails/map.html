@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="m.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         
         @media (min-width: 1000px) {
@@ -223,8 +225,14 @@
                     <i class="fas fa-sync-alt"></i>
                     Reset View
                 </button>
+                <button class="btn btn-secondary" onclick="downloadPDF()">
+    <i class="fas fa-file-pdf"></i> Download Report PDF
+</button>
+
             </div>
         </div>
+
+        
 
         <div class="map-container">
             <div id="map"></div>
@@ -376,7 +384,81 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+async function downloadPDF() {
+    if (!window.jspdf) {
+        alert("PDF generator failed to load. Please check your internet connection.");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF({ unit: "pt", format: "letter" });
+    const margin = 40;
+    let y = 60;
+
+    // HEADER
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("TreeTails Olongapo – Site & Rescue Report", margin, y);
+    y += 25;
+
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text("Automatically generated from the live dashboard.", margin, y);
+    y += 30;
+
+    // LOOP THROUGH LOCATIONS
+    doc.setFontSize(12);
+
+    appData.locations.forEach((loc, index) => {
+
+        // Page overflow check
+        if (y > 720) {  
+            doc.addPage();
+            y = 60;
+        }
+
+        doc.setFont("Helvetica", "bold");
+        doc.text(`${index + 1}. ${loc.name}`, margin, y);
+        y += 18;
+
+        doc.setFont("Helvetica", "normal");
+
+        const typeLabel = loc.type === "tree" ? "Tree Planting Site" : "Animal Rescue";
+
+        doc.text(`Type: ${typeLabel}`, margin, y); y += 15;
+        doc.text(`Description: ${loc.description || "No description"}`, margin, y); y += 15;
+
+        if (loc.type === "tree") {
+            doc.text(`Tree Type: ${loc.treeType}`, margin, y); y += 15;
+            doc.text(`Priority: ${loc.priority}`, margin, y); y += 15;
+        } else {
+            doc.text(`Animal Type: ${loc.animalType}`, margin, y); y += 15;
+            doc.text(`Condition: ${loc.condition}`, margin, y); y += 15;
+            doc.text(`Urgency: ${loc.urgency}`, margin, y); y += 15;
+        }
+
+        doc.text(`Coordinates: ${loc.lat}, ${loc.lng}`, margin, y); 
+        y += 25;
+
+        doc.setDrawColor(180);
+        doc.line(margin, y, 560, y); // divider line
+        y += 20;
+    });
+
+    // FOOTER
+    doc.setFont("Helvetica", "italic");
+    doc.setFontSize(10);
+    doc.text("Report generated from TreeTails Map Dashboard", margin, 760);
+
+    doc.save("TreeTails_Report.pdf");
+}
 </script>
+
+
+
+
     <script src="m.js"></script>
 </body>
 </html>
