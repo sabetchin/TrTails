@@ -1,128 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TreeTails - Olongapo City Green Spaces</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- ICONS & STYLES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link rel="stylesheet" href="m.css">
+    <link rel="stylesheet" href="m.css" />
+
+    <!-- PDF GENERATOR (jsPDF + AutoTable) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Chart.js (for grayscale graphs) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Firebase COMPAT SDK (required for your firebase-init.js) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+    <!-- Your Firebase initializer -->
+    <script src="firebase-init.js"></script>
+
+    <!-- Sidebar styling -->
     <style>
-        
         @media (min-width: 1000px) {
-    nav { 
-        position: fixed; 
-        left: 24px; 
-        top: 24px; 
-        width: 300px; 
-        height: calc(100vh - 48px); 
-        border-radius: 18px; 
-        padding: 20px; 
-        /* Match the Index page gradient */
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); 
-        box-shadow: 0 20px 60px rgba(15, 122, 95, 0.2); 
-        z-index: 999;
-    }
+            nav {
+                position: fixed;
+                left: 24px;
+                top: 24px;
+                width: 300px;
+                height: calc(100vh - 48px);
+                border-radius: 18px;
+                padding: 20px;
+                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+                box-shadow: 0 20px 60px rgba(15, 122, 95, 0.2);
+                z-index: 999;
+            }
 
-    .nav-container { 
-        height: 100%; 
-        display: flex; 
-        flex-direction: column; 
-        gap: 18px; 
-        align-items: stretch; 
-    }
+            .nav-container {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+                align-items: stretch;
+            }
 
-    .nav-links { 
-        display: flex; 
-        flex-direction: column; 
-        gap: 10px; 
-        margin-top: 12px; 
-        padding-top: 12px; 
-        border-top: 1px solid rgba(255,255,255,0.1); 
-    }
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 12px;
+                padding-top: 12px;
+                border-top: 1px solid rgba(255,255,255,0.1);
+            }
 
-    .nav-links li a { 
-        color: rgba(255,255,255,0.95); 
-        padding: 12px 16px; 
-        border-radius: 12px; 
-        font-weight: 500;
-        transition: var(--transition);
-    }
-    
-    .nav-links li a:hover, .nav-links li a.active {
-        background: rgba(255,255,255,0.2);
-        color: var(--white);
-        transform: translateX(4px);
-    }
+            .nav-links li a {
+                color: rgba(255,255,255,0.95);
+                padding: 12px 16px;
+                border-radius: 12px;
+                font-weight: 500;
+                transition: var(--transition);
+            }
 
-    .sidebar-profile { 
-        margin-top: auto; /* Pushes profile to bottom if needed, or keep margin-top: 6px */
-    }
+            .nav-links li a:hover,
+            .nav-links li a.active {
+                background: rgba(255,255,255,0.2);
+                color: var(--white);
+                transform: translateX(4px);
+            }
 
-    .profile-mini { 
-        display: flex; 
-        gap: 12px; 
-        align-items: center; 
-        color: var(--white);
-    }
+            .sidebar-profile {
+                margin-top: auto;
+            }
 
-    .profile-mini-avatar { 
-        width: 48px; 
-        height: 48px; 
-        border-radius: 12px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        background: rgba(255,255,255,0.2); 
-        color: #fff; 
-        font-weight: 700; 
-    }
-    
-    .profile-mini-info {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .profile-mini-name { font-weight: 600; font-size: 0.95rem; }
-    .profile-mini-role { font-size: 0.75rem; opacity: 0.8; }
+            .profile-mini {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                color: var(--white);
+            }
 
-    .report-btn { 
-        margin-top: 20px; 
-        background: linear-gradient(90deg, var(--secondary), var(--accent)); 
-        color: var(--dark); 
-        font-weight: 700; 
-        padding: 12px; 
-        border-radius: 12px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-        gap: 10px; 
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-        border: none;
-        width: 100%;
-        cursor: pointer;
-    }
+            .profile-mini-avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255,255,255,0.2);
+                color: #fff;
+                font-weight: 700;
+            }
 
-    .container { 
-        margin-left: 350px; 
-        width: calc(100% - 374px); 
-        max-width: 1400px;
-        padding-top: 24px;
-    }
-}
+            .profile-mini-info {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .profile-mini-name {
+                font-weight: 600;
+                font-size: 0.95rem;
+            }
+
+            .profile-mini-role {
+                font-size: 0.75rem;
+                opacity: 0.8;
+            }
+
+            .report-btn {
+                margin-top: 20px;
+                background: linear-gradient(90deg, var(--secondary), var(--accent));
+                color: var(--dark);
+                font-weight: 700;
+                padding: 12px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                border: none;
+                width: 100%;
+                cursor: pointer;
+            }
+
+            .container {
+                margin-left: 350px;
+                width: calc(100% - 374px);
+                max-width: 1400px;
+                padding-top: 24px;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body>
-    <!-- Navigation - Updated to match bulletin style -->
+
+    <!-- Navigation Sidebar -->
     <nav>
         <div class="nav-container">
             <a class="nav-brand" href="index.html">
                 <i class="fas fa-leaf"></i>
                 TreeTails
             </a>
-            <div class="sidebar-profile" aria-hidden="false">
+
+            <div class="sidebar-profile">
                 <div class="profile-mini">
                     <div class="profile-mini-avatar">TL</div>
                     <div class="profile-mini-info">
@@ -130,11 +187,15 @@
                         <div class="profile-mini-role">Tree Planter & Rescuer</div>
                     </div>
                 </div>
-                <button class="btn report-btn" id="reportBtn"><i class="fas fa-plus-circle"></i> Report New Rescue</button>
+
+                <button class="btn report-btn" id="reportBtn">
+                    <i class="fas fa-plus-circle"></i> Report New Rescue
+                </button>
             </div>
+
             <ul class="nav-links">
                 <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="education.html" class="active"><i class="fas fa-graduation-cap"></i> Education Hub</a></li>
+                <li><a href="education.html"><i class="fas fa-graduation-cap"></i> Education Hub</a></li>
                 <li><a href="bulletin.html"><i class="fas fa-bell"></i> Bulletin</a></li>
                 <li><a href="adoption.html"><i class="fas fa-heart"></i> Adoption</a></li>
                 <li><a href="map.html" class="active"><i class="fas fa-map"></i> Map</a></li>
@@ -142,8 +203,8 @@
         </div>
     </nav>
 
+    <!-- MAIN -->
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <div class="logo">
                 <div class="logo-icon">🌳🐾</div>
@@ -153,7 +214,6 @@
             <p class="location">Making Olongapo City Cleaner and Greener, Together</p>
         </div>
 
-        <!-- Stats Section -->
         <div class="stats-container">
             <div class="stat-card">
                 <div class="stat-number" id="treeCount">0</div>
@@ -183,14 +243,14 @@
                     <div class="step-number">2</div>
                     <div class="step-content">
                         <h4>Pin Tree Locations</h4>
-                        <p>Click "Add Tree Planting Site" to mark areas for reforestation</p>
+                        <p>Click "Add Tree Planting Site" to mark reforestation areas</p>
                     </div>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
                     <div class="step-content">
                         <h4>Report Animal Rescue</h4>
-                        <p>Use "Pin Animal Rescue" to mark locations where animals need help</p>
+                        <p>Use "Pin Animal Rescue" to mark animals needing help</p>
                     </div>
                 </div>
                 <div class="step">
@@ -203,58 +263,63 @@
             </div>
         </div>
 
+        <!-- CONTROLS -->
         <div class="map-controls">
             <div class="control-group">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search locations in Olongapo...">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search locations...">
                 <select class="filter-select" id="typeFilter">
                     <option value="all">All Locations</option>
                     <option value="tree">Tree Planting Sites</option>
                     <option value="animal">Animal Rescue</option>
                 </select>
             </div>
+
             <div class="control-group">
                 <button class="btn btn-primary" id="addTreeBtn">
-                    <i class="fas fa-tree"></i>
-                    Add Tree Planting Site
+                    <i class="fas fa-tree"></i> Add Tree Planting Site
                 </button>
-                <button class="btn btn-animal" id="addAnimalBtn">
-                    <i class="fas fa-first-aid"></i>
-                    Pin Animal Rescue
-                </button>
-                <button class="btn btn-secondary" id="resetViewBtn">
-                    <i class="fas fa-sync-alt"></i>
-                    Reset View
-                </button>
-                <button class="btn btn-secondary" onclick="downloadPDF()">
-    <i class="fas fa-file-pdf"></i> Download Report PDF
-</button>
 
+                <button class="btn btn-animal" id="addAnimalBtn">
+                    <i class="fas fa-first-aid"></i> Pin Animal Rescue
+                </button>
+
+                <button class="btn btn-secondary" id="resetViewBtn">
+                    <i class="fas fa-sync-alt"></i> Reset View
+                </button>
+
+                <!-- DOWNLOAD BUTTON (opens export modal) -->
+                <button class="btn btn-secondary" onclick="openPdfModal()">
+                    <i class="fas fa-file-pdf"></i> Download Report PDF
+                </button>
             </div>
         </div>
 
-        
-
+        <!-- MAP LAYOUT -->
         <div class="map-container">
             <div id="map"></div>
+
             <div class="map-sidebar">
+
                 <div class="sidebar-section">
                     <h3><i class="fas fa-tree"></i> Tree Planting Sites</h3>
                     <div class="location-list" id="treeLocations">
                         <div class="empty-state">
                             <i class="fas fa-tree"></i>
-                            <p>No tree planting sites added yet</p>
+                            <p>No tree planting sites yet</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="sidebar-section">
                     <h3><i class="fas fa-paw"></i> Animal Rescue Locations</h3>
                     <div class="location-list" id="animalLocations">
                         <div class="empty-state">
                             <i class="fas fa-paw"></i>
-                            <p>No animal rescue locations added yet</p>
+                            <p>No animal rescue locations yet</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="map-legend">
                     <div class="legend-item">
                         <div class="legend-color legend-tree"></div>
@@ -265,83 +330,87 @@
                         <span>Animal Rescue</span>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Pin Mode Indicator -->
+    <!-- PIN MODE -->
     <div class="pin-mode-indicator" id="pinModeIndicator">
         <i class="fas fa-map-pin"></i>
         <span id="pinModeText">Click on the map to place a pin</span>
         <button class="btn btn-secondary" id="cancelPinMode">Cancel</button>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
-    <!-- Add Tree Planting Site Modal -->
+    <!-- TREE MODAL -->
     <div class="modal" id="treeModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Add Tree Planting Site</h3>
                 <button class="close-modal" id="closeTreeModal">&times;</button>
             </div>
+
             <form id="treeForm">
                 <div class="form-group">
-                    <label for="treeLocationName">Location Name</label>
-                    <input type="text" id="treeLocationName" placeholder="e.g., Rizal Triangle Park" required>
+                    <label>Location Name</label>
+                    <input type="text" id="treeLocationName" required />
                 </div>
                 <div class="form-group">
-                    <label for="treeDescription">Description</label>
-                    <textarea id="treeDescription" placeholder="Describe this location and why it's suitable for tree planting"></textarea>
+                    <label>Description</label>
+                    <textarea id="treeDescription"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="treeType">Tree Type</label>
+                    <label>Tree Type</label>
                     <select id="treeType">
-                        <option value="narra">Narra (National Tree)</option>
+                        <option value="narra">Narra</option>
                         <option value="acacia">Acacia</option>
                         <option value="mango">Mango</option>
-                        <option value="coconut">Coconut</option>
                         <option value="mahogany">Mahogany</option>
                         <option value="other">Other Native Species</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="treePriority">Planting Priority</label>
+                    <label>Priority</label>
                     <select id="treePriority">
-                        <option value="high">High - Urgent need for reforestation</option>
-                        <option value="medium">Medium - Would benefit from more trees</option>
-                        <option value="low">Low - Nice to have additional trees</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
                     </select>
                 </div>
+
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelTree">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Planting Site</button>
+                    <button class="btn btn-secondary" id="cancelTree" type="button">Cancel</button>
+                    <button class="btn btn-primary" type="submit">Add Planting Site</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Add Animal Rescue Modal -->
+    <!-- ANIMAL MODAL -->
     <div class="modal" id="animalModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Pin Animal Rescue Location</h3>
                 <button class="close-modal" id="closeAnimalModal">&times;</button>
             </div>
+
             <form id="animalForm">
                 <div class="form-group">
-                    <label for="animalType">Animal Type</label>
+                    <label>Animal Type</label>
                     <select id="animalType" required>
-                        <option value="">Select animal type</option>
+                        <option value="">Select...</option>
                         <option value="dog">Dog</option>
                         <option value="cat">Cat</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="animalCondition">Animal Condition</label>
+                    <label>Condition</label>
                     <select id="animalCondition" required>
-                        <option value="">Select condition</option>
+                        <option value="">Select...</option>
                         <option value="injured">Injured</option>
                         <option value="sick">Sick/Weak</option>
                         <option value="hungry">Hungry/Thin</option>
@@ -349,151 +418,239 @@
                         <option value="stray">Healthy Stray</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="animalDescription">Description</label>
-                    <textarea id="animalDescription" placeholder="Describe the animal (color, size, behavior, etc.)"></textarea>
+                    <label>Description</label>
+                    <textarea id="animalDescription"></textarea>
                 </div>
+
                 <div class="form-group">
-                    <label for="animalUrgency">Rescue Urgency</label>
+                    <label>Urgency</label>
                     <select id="animalUrgency">
-                        <option value="high">High - Immediate attention needed</option>
-                        <option value="medium">Medium - Should be addressed today</option>
-                        <option value="low">Low - Monitoring needed</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
                     </select>
                 </div>
+
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelAnimal">Cancel</button>
-                    <button type="submit" class="btn btn-animal">Pin Rescue Location</button>
+                    <button class="btn btn-secondary" id="cancelAnimal" type="button">Cancel</button>
+                    <button class="btn btn-animal" type="submit">Pin Rescue Location</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- EXPORT OPTIONS MODAL -->
+    <div class="modal" id="pdfOptionsModal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <h3>Export Report</h3>
+                <button class="close-modal" onclick="closePdfModal()">&times;</button>
+            </div>
+
+            <label style="display:flex;align-items:center;gap:12px;margin:10px 0;">
+                <input type="checkbox" id="includeGraphsCheckbox" />
+                <span>Include graphs</span>
+            </label>
+
+            <p style="margin-bottom:20px;color:#444;">
+                Select this option to include bar and pie charts in the PDF report.
+            </p>
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;">
+                <button class="btn btn-secondary" onclick="closePdfModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="generatePdfWithOptions()">Generate PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- ===================================
+          PDF + GRAPH + EXPORT SCRIPTS
+    =================================== -->
     <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const currentPage = window.location.pathname.split("/").pop();
-
-    document.querySelectorAll(".nav-links a").forEach(link => {
-        const linkPage = link.getAttribute("href");
-
-        if (linkPage === currentPage) {
-            link.classList.add("active");
-        } else {
-            link.classList.remove("active");
+        /* OPEN/CLOSE EXPORT MODAL */
+        function openPdfModal() {
+            document.getElementById("pdfOptionsModal").style.display = "flex";
         }
-    });
-});
+        function closePdfModal() {
+            document.getElementById("pdfOptionsModal").style.display = "none";
+        }
+        function generatePdfWithOptions() {
+            const includeGraphs = document.getElementById("includeGraphsCheckbox").checked;
+            closePdfModal();
+            setTimeout(() => downloadPDF(includeGraphs), 200);
+        }
 
-async function downloadPDF() {
-    if (!window.jspdf) {
-        alert("PDF library failed to load.");
-        return;
-    }
+        /* GENERATE CHART IMAGE */
+        async function createChart(type, labels, data, title) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement("canvas");
+                canvas.width = 600;
+                canvas.height = 600;
+                canvas.style.position = "fixed";
+                canvas.style.left = "-2000px";
+                document.body.appendChild(canvas);
 
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit: "pt", format: "letter" });
+                const chart = new Chart(canvas, {
+                    type,
+                    data: {
+                        labels,
+                        datasets: [{
+                            data,
+                           backgroundColor: ["#4caf50", "#2196f3"],   // Green, Blue
+borderColor: ["#2e7d32", "#1565c0"],       // Darker outlines
 
-    const margin = 40;
-    
-    // --- HEADER ---
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(22);
-    doc.setTextColor(0, 0, 0); // Black
-    doc.text("TreeTails Olongapo", margin, 60);
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: title,
+                                color: "#000",
+                                font: { size: 16, weight: 600 }
+                            }
+                        }
+                    }
+                });
 
-    doc.setFont("Helvetica", "normal");
-    doc.setFontSize(12);
-    doc.text("Tree Planting & Animal Rescue Dashboard Report", margin, 80);
+                setTimeout(() => {
+                    const url = canvas.toDataURL("image/png");
+                    chart.destroy();
+                    canvas.remove();
+                    resolve(url);
+                }, 350);
+            });
+        }
 
-    // Line separator
-    doc.setLineWidth(1);
-    doc.setDrawColor(0, 0, 0); // Black line
-    doc.line(margin, 90, 575, 90);
+        /* BUILD ALL GRAPHS */
+        async function generateGraphs() {
+            const locs = appData.locations;
+            const tree = locs.filter(l => l.type === "tree").length;
+            const animal = locs.filter(l => l.type === "animal").length;
 
+            const priority = { high:0, medium:0, low:0, other:0 };
+            locs.forEach(l => {
+                let key = (l.priority || l.urgency || "other").toLowerCase();
+                priority[key] = (priority[key] || 0) + 1;
+            });
 
-    let y = 120;
+            const bar = await createChart(
+                "bar",
+                ["Tree Sites", "Animal Rescues"],
+                [tree, animal],
+                "Site Type Breakdown"
+            );
 
-    // --- TABLE DATA PREP ---
-    const tableRows = [];
-    if (typeof appData !== 'undefined' && appData.locations) {
-        appData.locations.forEach((loc) => {
-            tableRows.push([
-                loc.type === "tree" ? "Tree Site" : "Animal Rescue",
-                loc.name,
-                loc.description || "—",
-                loc.type === "tree" ? (loc.treeType || "—") : (loc.animalType || "—"),
-                // Combined the text to keep it short if needed, or keeping full text
-                loc.type === "tree" ? (loc.priority || "—") : (loc.urgency || "—"), 
-                `${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}`
+            const pie = await createChart(
+                "pie",
+                ["High", "Medium", "Low", "Other"],
+                [priority.high, priority.medium, priority.low, priority.other],
+                "Priority / Urgency Breakdown"
+            );
+
+            return { bar, pie };
+        }
+
+        /* MAIN PDF GENERATOR */
+        async function downloadPDF(includeGraphs = false) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: "pt", format: "letter" });
+
+            let y = 60;
+            const margin = 40;
+
+            /* HEADER */
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(20);
+            doc.text("TreeTails Olongapo", margin, y);
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(12);
+            doc.text("Tree Planting & Animal Rescue Dashboard Report", margin, y+18);
+            doc.line(margin, y+24, 575, y+24);
+            y += 50;
+
+            /* KEY INSIGHTS */
+            const total = appData.locations.length;
+            const t = appData.locations.filter(a => a.type === "tree").length;
+            const a = appData.locations.filter(a => a.type === "animal").length;
+
+            doc.setFont("Helvetica","bold");
+            doc.setFontSize(11);
+            doc.text("Key Insights:", margin, y);
+            doc.setFont("Helvetica","normal");
+            doc.text(`• Total locations: ${total}`, margin, y+14);
+            doc.text(`• Tree planting sites: ${t}`, margin, y+28);
+            doc.text(`• Animal rescue locations: ${a}`, margin, y+42);
+            y += 70;
+
+            /* TABLE */
+            const rows = appData.locations.map(l => [
+                l.type === "tree" ? "Tree Site" : "Animal Rescue",
+                l.name,
+                l.description || "—",
+                l.type === "tree" ? l.treeType : l.animalType,
+                l.type === "tree" ? l.priority : l.urgency,
+                `${l.lat.toFixed(4)}, ${l.lng.toFixed(4)}`
             ]);
-        });
-    }
 
-    // --- AUTOTABLE ---
-    doc.autoTable({
-        startY: y,
-        // Renamed 'Priority/Urgency' to 'Priority' to save space, 
-        // or we can just give it more width (done below)
-        head: [[
-            "Type",
-            "Location Name",
-            "Description",
-            "Category",
-            "Priority", 
-            "Coordinates"
-        ]],
-        body: tableRows,
-        theme: "grid", // CHANGED: 'grid' adds the black borders
-        
-        // GLOBAL STYLES
-        styles: {
-            lineColor: [0, 0, 0], // Black borders
-            lineWidth: 0.5,
-            textColor: [0, 0, 0], // Black text
-            valign: 'middle',     // Vertically center text
-            fontSize: 10
-        },
+            doc.autoTable({
+                startY: y,
+                head: [["Type","Name","Description","Category","Priority/Urgency","Coordinates"]],
+                body: rows,
+                theme: "grid",
+                styles: { fontSize:10, textColor:0, font:"Helvetica" },
+                headStyles: { fillColor:[230,230,230], textColor:0 },
+                columnStyles: {
+                    0:{cellWidth:70},
+                    1:{cellWidth:100},
+                    2:{cellWidth:"auto"},
+                    3:{cellWidth:80},
+                    4:{cellWidth:80},
+                    5:{cellWidth:90}
+                }
+            });
 
-        // HEADER SPECIFIC STYLES
-        headStyles: {
-            fillColor: [220, 220, 220], // Light Grey background (easier to read than solid black)
-            textColor: [0, 0, 0],       // Black text
-            fontStyle: 'bold',
-            halign: 'center'            // Center align headers
-        },
+            /* GRAPHS */
+            if (includeGraphs) {
+                const g = await generateGraphs();
 
-        // COLUMN CONFIGURATION
-        columnStyles: {
-            0: { cellWidth: 70, halign: 'center' }, // Type (Centered)
-            1: { cellWidth: 100 },                  // Name
-            2: { cellWidth: 'auto' },               // Description gets remaining space
-            3: { cellWidth: 70, halign: 'center' }, // Category (Centered)
-            4: { cellWidth: 70, halign: 'center' }, // Priority (Centered)
-            5: { cellWidth: 100, halign: 'center' } // Coordinates (Centered & Widened)
+                doc.addPage();
+                doc.text("Graphs — Type Breakdown", margin, 40);
+                doc.addImage(g.bar, "PNG", margin, 60, 300, 300);
+
+
+                doc.addPage();
+                doc.text("Graphs — Priority / Urgency", margin, 40);
+                doc.addImage(g.pie, "PNG", margin, 60, 350, 350);
+            }
+
+            /* FOOTER */
+            const username = auth.currentUser?.displayName || "Unknown";
+            const timestamp = new Date().toLocaleString();
+            const pages = doc.internal.getNumberOfPages();
+
+            for (let p = 1; p <= pages; p++) {
+                doc.setPage(p);
+                doc.setFont("Helvetica","italic");
+                doc.setFontSize(10);
+                doc.text(`Generated by: ${username} • ${timestamp}`, margin, 760);
+                doc.text(`Page ${p} of ${pages}`, 520, 760);
+            }
+
+            doc.save("Animal_Rescue_and_Tree_Planting_Report.pdf");
         }
-    });
+    </script>
 
-    // --- FOOTER ---
-    const finalY = doc.lastAutoTable.finalY + 40;
-
-    doc.setFont("Helvetica", "italic");
-    doc.setFontSize(10);
-    doc.setTextColor(0, 0, 0); 
-    doc.text(
-        "Generated by TreeTails Olongapo Dashboard • " + new Date().toLocaleString(),
-        margin,
-        finalY
-    );
-
-    doc.save("Rescue_and_Planting_Report.pdf");
-}
-
-</script>
-
-
-
-
+    <!-- Your Main JS -->
     <script src="m.js"></script>
+
 </body>
 </html>
